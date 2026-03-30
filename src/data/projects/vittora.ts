@@ -1,0 +1,56 @@
+import { Project } from '@/types/project';
+
+export const vittora: Project = {
+  id: '02',
+  name: 'Vittora',
+  slug: 'vittora',
+  tagline: 'Track money. Build goals.',
+  description:
+    'Personal finance tracking focused on discipline and strategic wealth savings. A robust, offline-first goal-based money tracker.',
+  status: 'live',
+  category: 'app',
+  platforms: ['android'],
+  categoryLabel: 'Finance Tracker',
+  coverImage: null,
+  screenshots: [],
+  icon: null,
+  colorAccent: '#e9c349',
+  features: [
+    {
+      icon: 'account_balance_wallet',
+      title: 'Multi-Goal Tracking',
+      description: 'Manage multiple concurrent financial goals simultaneously while calculating trajectory towards completion.',
+      sortOrder: 1,
+    },
+    {
+      icon: 'insights',
+      title: 'Goal Projection Engine',
+      description: 'Estimate exactly when you will reach milestones to stay motivated and engaged.',
+      sortOrder: 2,
+    },
+    {
+      icon: 'offline_bolt',
+      title: 'Offline-First Architecture',
+      description: 'Fully functional without an internet connection, securing personal financial data entirely on your device.',
+      sortOrder: 3,
+    },
+  ],
+  downloads: {
+    apkUrl: 'https://github.com/aditya-gothe/vittora/releases/download/v1.0.0/vittora-v1.0.0.apk',
+    githubReleaseUrl: 'https://github.com/aditya-gothe/vittora/releases/tag/v1.0.0',
+    sourceCodeUrl: 'https://github.com/aditya-gothe/vittora',
+    version: '1.0.0',
+    versionCode: 1,
+    releaseDate: '2026-03-29T00:00:00Z',
+    releaseNotes: '• Initial stable release\n• Multi-goal management support',
+    fileSize: '18.2 MB',
+    minAndroidVersion: 'Android 8.0+',
+    sha256Checksum: 'b2c3d4e5f6g7h8i9j0a1',
+  },
+  techStack: ['React Native', 'Expo', 'SQLite'],
+  createdAt: '2026-03-29T00:00:00Z',
+  updatedAt: '2026-03-29T00:00:00Z',
+  sortOrder: 2,
+  metaTitle: 'Vittora — Finance Goal Tracker',
+  metaDescription: 'Track money and build goals with Vittora, an elegant offline-first financial tracker.',
+};
