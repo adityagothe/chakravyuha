@@ -1,18 +1,38 @@
+import type { Metadata } from 'next';
 import { getProjectBySlug, getProjectSlugs } from '@/data/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+  if (!project) return {};
+
+  return {
+    title: project.metaTitle,
+    description: project.metaDescription,
+    openGraph: {
+      title: project.metaTitle,
+      description: project.metaDescription,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.metaTitle,
+      description: project.metaDescription,
+    },
+  };
+}
+
 export async function generateStaticParams() {
   return getProjectSlugs().map((slug) => ({ slug }));
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
 
