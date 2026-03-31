@@ -110,39 +110,24 @@ export function ProjectCard({ project, variant = 'small', className }: ProjectCa
           </div>
         )}
 
-        {/* Action row */}
-        <div className="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
-          <div className="flex items-center gap-3">
-            {project.platforms.map((platform) => (
-              <span
-                key={platform}
-                className="font-label text-[9px] uppercase tracking-widest text-neutral-600"
-              >
-                {platform}
-              </span>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 text-primary/70 group-hover:text-primary transition-colors">
-            <span className="font-label text-xs uppercase tracking-widest">Explore</span>
-            <MaterialIcon
-              name="arrow_forward"
-              size="sm"
-              className="transition-transform group-hover:translate-x-1"
-            />
-          </div>
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-stretch gap-3 mt-auto pt-4 border-t border-outline-variant/10">
+          <Link
+            href={`/projects/${project.slug}`}
+            className="relative z-20 flex items-center justify-center gap-2 px-5 py-3 rounded border border-primary/20 text-primary font-label text-[10px] uppercase tracking-widest font-bold hover:bg-primary/5 hover:border-primary/40 active:scale-95 transition-all flex-1"
+          >
+            <MaterialIcon name="visibility" size="sm" />
+            View Details
+          </Link>
+          <Link
+            href={`/projects/${project.slug}/download`}
+            className="relative z-20 flex items-center justify-center gap-2 px-5 py-3 rounded gold-gradient-bg text-on-primary font-label text-[10px] uppercase tracking-widest font-bold hover:shadow-[0_8px_24px_-8px_rgba(233,195,73,0.3)] hover:-translate-y-0.5 active:scale-95 transition-all flex-1"
+          >
+            <MaterialIcon name="download" size="sm" />
+            Download
+          </Link>
         </div>
       </div>
-
-      {/* Full card link overlay */}
-      {project.downloads?.sourceCodeUrl && (
-        <Link
-          href={project.downloads.sourceCodeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="absolute inset-0 z-10"
-          aria-label={`View ${project.name}`}
-        />
-      )}
     </div>
   );
 }
