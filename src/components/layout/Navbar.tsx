@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
   const activeSection = useScrollSpy({ targets: ['hero', 'projects', 'skills', 'about', 'contact'] });
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-12 font-headline tracking-tight text-lg">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.id;
+              const isActive = activeSection === link.id || (link.href === pathname && link.id === 'music');
               return (
                 <Link
                   key={link.name}
@@ -146,7 +148,7 @@ export function Navbar() {
         {/* Nav Links */}
         <nav className="flex flex-col gap-1 px-4 py-6 flex-1">
           {navLinks.map((link, i) => {
-            const isActive = activeSection === link.id;
+            const isActive = activeSection === link.id || (link.href === pathname && link.id === 'music');
             return (
               <Link
                 key={link.name}
