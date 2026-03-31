@@ -11,8 +11,15 @@ export const vittora: Project = {
   category: 'app',
   platforms: ['android'],
   categoryLabel: 'Finance Tracker',
-  coverImage: null,
-  screenshots: [],
+  coverImage: { src: '/images/Vittora-cover.png', alt: 'Vittora Cover' },
+  screenshots: [
+    { image: { src: '/images/Vittora-screenshot.png', alt: 'Overview' }, gridSpan: 2, gridRowSpan: 2, caption: 'Overview' },
+    { image: { src: '/images/Vittora-screenshot2.png', alt: 'Details' }, gridSpan: 1, gridRowSpan: 1, caption: 'Details' },
+    { image: { src: '/images/Vittora-screenshot3.png', alt: 'Goals' }, gridSpan: 1, gridRowSpan: 2, caption: 'Goals' },
+    { image: { src: '/images/Vittora-screenshot4.png', alt: 'Insights' }, gridSpan: 1, gridRowSpan: 1, caption: 'Insights' },
+    { image: { src: '/images/Vittora-screenshot5.png', alt: 'Analytics' }, gridSpan: 1, gridRowSpan: 1, caption: 'Analytics' },
+    { image: { src: '/images/Vittora-screenshot6.png', alt: 'Profile' }, gridSpan: 1, gridRowSpan: 1, caption: 'Profile' },
+  ],
   icon: null,
   colorAccent: '#e9c349',
   features: [

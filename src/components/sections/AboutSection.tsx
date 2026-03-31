@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { FadeIn } from '@/components/ui/FadeIn';
 import { SectionHeader } from '../ui/SectionHeader';
-import { ImagePlaceholder } from '../ui/ImagePlaceholder';
+import NextImage from 'next/image';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { aboutContent } from '@/data/about';
 import { siteConfig } from '@/data/site';
@@ -27,24 +27,28 @@ export function AboutSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
           {/* Portrait */}
-          <FadeIn direction="right" delay={100} className="md:col-span-5 relative">
-            <div className="relative aspect-[3/4] rounded-xl overflow-hidden border border-outline-variant/20 group">
-              <ImagePlaceholder
-                label="Portrait"
-                icon="person"
-                accentColor="#e9c349"
-                className="rounded-none"
+          <FadeIn direction="right" delay={100} className="md:col-span-4 relative flex items-center justify-center">
+            {/* Keeping relative w-full but aspect-[3/4] using Next.js fill to match natural portrait image ratio without extreme cropping */}
+            <div className="relative w-full max-w-[400px] aspect-[8/11] rounded-xl overflow-hidden border border-outline-variant/20 shadow-2xl group mx-auto">
+              <NextImage
+                src="/images/potrait.png"
+                alt="Portrait"
+                fill
+                priority
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
               {/* Accent border glow */}
-              <div className="absolute inset-0 rounded-xl border border-primary/0 group-hover:border-primary/20 transition-colors duration-700" />
+              <div className="absolute inset-0 rounded-xl border border-primary/0 group-hover:border-primary/20 transition-colors duration-700 pointer-events-none" />
             </div>
             {/* Decorative elements */}
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 border border-primary/10 rounded-xl -z-10" />
-            <div className="absolute -top-4 -left-4 w-16 h-16 border border-secondary-container/10 rounded-xl -z-10" />
+            <div className="absolute -bottom-4 -right-4 md:-right-6 w-24 h-24 border border-primary/10 rounded-xl -z-10 bg-primary/5" />
+            <div className="absolute -top-4 -left-4 md:-left-6 w-16 h-16 border border-secondary-container/10 rounded-xl -z-10 bg-secondary-container/5" />
           </FadeIn>
 
+
           {/* Bio Content */}
-          <FadeIn direction="left" delay={200} className="md:col-span-7 flex flex-col gap-8">
+          <FadeIn direction="left" delay={200} className="md:col-span-8 flex flex-col gap-8">
             {aboutContent.paragraphs.map((paragraph, i) => (
               <p key={i} className="font-body text-base md:text-lg text-neutral-300 leading-relaxed">
                 {paragraph}

@@ -29,7 +29,7 @@ export function ProjectCard({ project, variant = 'small', className }: ProjectCa
       )}
     >
       {/* Cover Image Area */}
-      <div className={cn('relative overflow-hidden', isLarge ? 'h-64' : 'h-48')}>
+      <div className={cn('relative w-full aspect-video overflow-hidden')}>
         {project.coverImage ? (
           <img
             src={project.coverImage.src}
@@ -41,7 +41,7 @@ export function ProjectCard({ project, variant = 'small', className }: ProjectCa
             label={project.name}
             icon="deployed_code"
             accentColor={project.colorAccent}
-            className="rounded-none"
+            className="rounded-none w-full h-full"
           />
         )}
 

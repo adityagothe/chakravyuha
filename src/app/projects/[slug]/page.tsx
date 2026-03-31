@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { getProjectBySlug, getProjectSlugs } from '@/data/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import NextImage from 'next/image';
+import { cn } from '@/lib/utils';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 
@@ -179,6 +181,58 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Screenshot Gallery */}
+      {project.screenshots && project.screenshots.length > 0 && (
+        <section className="mb-24">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="font-label text-primary uppercase tracking-[0.3em] text-[10px] mb-2">Visuals</p>
+              <h2 className="font-headline text-3xl italic font-bold">Interface Archives</h2>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {project.screenshots.map((shot, idx) => (
+              <div 
+                key={idx} 
+                className={cn(
+                  "relative rounded-xl overflow-hidden glass-panel border border-outline-variant/20 shadow-2xl group",
+                  shot.gridSpan === 2 ? "md:col-span-2" : "col-span-1",
+                  shot.gridRowSpan === 2 ? "row-span-2" : "row-span-1",
+                  // Set base height or aspect ratios depending on span to make it look bento-ish
+                  (shot.gridSpan === 2 && shot.gridRowSpan === 2) ? "aspect-square md:aspect-video" 
+                  : (shot.gridRowSpan === 2) ? "aspect-[9/16]" 
+                  : "aspect-video"
+                )}
+              >
+                {shot.image ? (
+                  <NextImage
+                    src={shot.image.src}
+                    alt={shot.image.alt || shot.caption || 'Screenshot'}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                ) : (
+                  <ImagePlaceholder
+                    label={shot.caption || 'Screenshot'}
+                    icon="image"
+                    accentColor={project.colorAccent}
+                    className="rounded-none w-full h-full"
+                  />
+                )}
+                {/* Overlay Caption */}
+                {shot.caption && (
+                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                    <p className="font-label text-[10px] text-on-surface uppercase tracking-widest">{shot.caption}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Features Bento Grid */}
       {project.features.length > 0 && (
