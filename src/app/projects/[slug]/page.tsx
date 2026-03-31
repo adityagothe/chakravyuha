@@ -3,7 +3,6 @@ import { getProjectBySlug, getProjectSlugs } from '@/data/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import NextImage from 'next/image';
-import { cn } from '@/lib/utils';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 
@@ -182,7 +181,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Screenshot Gallery */}
+      {/* Screenshot Gallery — horizontal scroll carousel */}
       {project.screenshots && project.screenshots.length > 0 && (
         <section className="mb-24">
           <div className="flex items-end justify-between mb-8">
@@ -190,46 +189,63 @@ export default async function ProjectDetailPage({ params }: Props) {
               <p className="font-label text-primary uppercase tracking-[0.3em] text-[10px] mb-2">Visuals</p>
               <h2 className="font-headline text-3xl italic font-bold">Interface Archives</h2>
             </div>
+            <p className="font-label text-[10px] text-on-surface-variant/40 uppercase tracking-widest hidden sm:flex items-center gap-2">
+              <MaterialIcon name="swipe" size="sm" />
+              Scroll to explore
+            </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {project.screenshots.map((shot, idx) => (
-              <div 
-                key={idx} 
-                className={cn(
-                  "relative rounded-xl overflow-hidden glass-panel border border-outline-variant/20 shadow-2xl group",
-                  shot.gridSpan === 2 ? "md:col-span-2" : "col-span-1",
-                  shot.gridRowSpan === 2 ? "row-span-2" : "row-span-1",
-                  // Set base height or aspect ratios depending on span to make it look bento-ish
-                  (shot.gridSpan === 2 && shot.gridRowSpan === 2) ? "aspect-square md:aspect-video" 
-                  : (shot.gridRowSpan === 2) ? "aspect-[9/16]" 
-                  : "aspect-video"
-                )}
-              >
-                {shot.image ? (
-                  <NextImage
-                    src={shot.image.src}
-                    alt={shot.image.alt || shot.caption || 'Screenshot'}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                ) : (
-                  <ImagePlaceholder
-                    label={shot.caption || 'Screenshot'}
-                    icon="image"
-                    accentColor={project.colorAccent}
-                    className="rounded-none w-full h-full"
-                  />
-                )}
-                {/* Overlay Caption */}
-                {shot.caption && (
-                  <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                    <p className="font-label text-[10px] text-on-surface uppercase tracking-widest">{shot.caption}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+
+          {/* Fade edges */}
+          <div className="relative">
+            {/* left fade */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-[var(--color-surface)] to-transparent" />
+            {/* right fade */}
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-[var(--color-surface)] to-transparent" />
+
+            <div
+              className="screenshot-scroll flex gap-5 overflow-x-auto pb-4 px-1"
+              style={{
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(233,195,73,0.25) transparent',
+              }}
+            >
+              {project.screenshots.map((shot, idx) => (
+                <div
+                  key={idx}
+                  className="relative flex-none rounded-xl overflow-hidden glass-panel border border-outline-variant/20 shadow-2xl group"
+                  style={{
+                    scrollSnapAlign: 'start',
+                    width: 'clamp(280px, 55vw, 720px)',
+                    aspectRatio: '16 / 9',
+                  }}
+                >
+                  {shot.image ? (
+                    <NextImage
+                      src={shot.image.src}
+                      alt={shot.image.alt || shot.caption || 'Screenshot'}
+                      fill
+                      className="object-contain group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                      sizes="(max-width: 768px) 90vw, 55vw"
+                    />
+                  ) : (
+                    <ImagePlaceholder
+                      label={shot.caption || 'Screenshot'}
+                      icon="image"
+                      accentColor={project.colorAccent}
+                      className="rounded-none w-full h-full"
+                    />
+                  )}
+                  {/* Caption */}
+                  {shot.caption && (
+                    <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/75 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <p className="font-label text-[10px] text-on-surface uppercase tracking-widest">{shot.caption}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
