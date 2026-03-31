@@ -112,17 +112,7 @@ export default async function DownloadPage({
                   APK Unavailable
                 </button>
               )}
-              {project.downloads.sourceCodeUrl && (
-                <a
-                  href={project.downloads.sourceCodeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-primary/20 hover:border-primary text-primary px-10 py-5 rounded font-label uppercase text-sm tracking-widest font-bold btn-outline-glow flex items-center justify-center gap-3"
-                >
-                  <MaterialIcon name="code" size="sm" />
-                  View Source Code
-                </a>
-              )}
+
             </div>
             <p className="font-label text-[10px] text-on-surface-variant/60 italic tracking-wider flex items-center gap-2">
               <MaterialIcon name="info" size="sm" />

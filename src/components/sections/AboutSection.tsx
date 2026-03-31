@@ -11,7 +11,9 @@ export function AboutSection() {
   const socials = [
     { icon: 'code', label: 'GitHub', href: siteConfig.socials.github },
     { icon: 'work', label: 'LinkedIn', href: siteConfig.socials.linkedin },
-    { icon: 'alternate_email', label: 'Twitter', href: siteConfig.socials.twitter },
+    { icon: 'photo_camera', label: 'Instagram', href: siteConfig.socials.instagram },
+    { icon: 'play_circle', label: 'YouTube', href: siteConfig.socials.youtubePersonal },
+    { icon: 'brand_awareness', label: 'Music', href: '/music' },
   ];
 
   return (
@@ -28,7 +30,6 @@ export function AboutSection() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-center">
           {/* Portrait */}
           <FadeIn direction="right" delay={100} className="md:col-span-4 relative flex items-center justify-center">
-            {/* Keeping relative w-full but aspect-[3/4] using Next.js fill to match natural portrait image ratio without extreme cropping */}
             <div className="relative w-full max-w-[400px] aspect-[8/11] rounded-xl overflow-hidden border border-outline-variant/20 shadow-2xl group mx-auto">
               <NextImage
                 src="/images/potrait.png"
@@ -38,14 +39,12 @@ export function AboutSection() {
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
-              {/* Accent border glow */}
               <div className="absolute inset-0 rounded-xl border border-primary/0 group-hover:border-primary/20 transition-colors duration-700 pointer-events-none" />
             </div>
             {/* Decorative elements */}
             <div className="absolute -bottom-4 -right-4 md:-right-6 w-24 h-24 border border-primary/10 rounded-xl -z-10 bg-primary/5" />
             <div className="absolute -top-4 -left-4 md:-left-6 w-16 h-16 border border-secondary-container/10 rounded-xl -z-10 bg-secondary-container/5" />
           </FadeIn>
-
 
           {/* Bio Content */}
           <FadeIn direction="left" delay={200} className="md:col-span-8 flex flex-col gap-8">
@@ -55,30 +54,14 @@ export function AboutSection() {
               </p>
             ))}
 
-            {/* Resume Download */}
-            <div className="pt-2">
-              <a
-                href="/resume.pdf"
-                download
-                id="download-resume"
-                className="inline-flex items-center gap-3 px-6 py-3 rounded-lg gold-gradient-bg text-on-primary font-label font-bold uppercase tracking-widest text-xs hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-10px_rgba(233,195,73,0.35)] active:scale-95 transition-all duration-300"
-              >
-                <MaterialIcon name="download" size="sm" />
-                Download Résumé
-              </a>
-              <p className="font-label text-[9px] uppercase tracking-widest text-neutral-600 mt-2">
-                PDF · Updated 2026
-              </p>
-            </div>
-
             {/* Social Links */}
             <div className="flex flex-wrap gap-3 pt-2">
               {socials.map((social) => (
                 <Link
                   key={social.label}
                   href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={social.href.startsWith('http') ? '_blank' : undefined}
+                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="group/social flex items-center gap-3 px-5 py-3 rounded-lg border border-outline-variant/15 bg-surface-container/50 hover:border-primary/30 hover:bg-surface-container transition-all duration-300"
                 >
                   <MaterialIcon

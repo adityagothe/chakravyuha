@@ -33,6 +33,7 @@ export function Navbar() {
     { name: 'Projects', href: '/#projects', id: 'projects' },
     { name: 'Skills', href: '/#skills', id: 'skills' },
     { name: 'About', href: '/#about', id: 'about' },
+    { name: 'Music', href: '/music', id: 'music' },
     { name: 'Contact', href: '/#contact', id: 'contact' },
   ];
 
@@ -171,6 +172,8 @@ export function Navbar() {
                     ? 'build'
                     : link.id === 'about'
                     ? 'person'
+                    : link.id === 'music'
+                    ? 'music_note'
                     : 'mail'}
                 </span>
                 {link.name}

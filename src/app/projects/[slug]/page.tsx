@@ -104,17 +104,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 <MaterialIcon name="download" size="sm" />
                 Download APK
               </Link>
-              {project.downloads.sourceCodeUrl && (
-                <Link
-                  href={project.downloads.sourceCodeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-primary/20 hover:border-primary text-primary px-10 py-5 rounded font-label font-bold text-sm tracking-wider btn-outline-glow flex items-center justify-center gap-3"
-                >
-                  <MaterialIcon name="code" size="sm" />
-                  View Source Code
-                </Link>
-              )}
+
             </div>
             <p className="font-label text-[10px] text-on-surface-variant/50 tracking-wider italic flex items-center gap-2">
               <MaterialIcon name="info" size="sm" />
