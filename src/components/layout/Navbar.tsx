@@ -36,6 +36,7 @@ export function Navbar() {
     { name: 'Skills', href: '/#skills', id: 'skills' },
     { name: 'About', href: '/#about', id: 'about' },
     { name: 'Music', href: '/music', id: 'music' },
+    { name: 'Art', href: '/art', id: 'art' },
     { name: 'Contact', href: '/#contact', id: 'contact' },
   ];
 
@@ -61,7 +62,9 @@ export function Navbar() {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-12 font-headline tracking-tight text-lg">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.id || (link.href === pathname && link.id === 'music');
+              const isActive =
+                activeSection === link.id ||
+                ((link.id === 'music' || link.id === 'art') && link.href === pathname);
               return (
                 <Link
                   key={link.name}
@@ -148,7 +151,9 @@ export function Navbar() {
         {/* Nav Links */}
         <nav className="flex flex-col gap-1 px-4 py-6 flex-1">
           {navLinks.map((link, i) => {
-            const isActive = activeSection === link.id || (link.href === pathname && link.id === 'music');
+            const isActive =
+              activeSection === link.id ||
+              ((link.id === 'music' || link.id === 'art') && link.href === pathname);
             return (
               <Link
                 key={link.name}
@@ -176,6 +181,8 @@ export function Navbar() {
                     ? 'person'
                     : link.id === 'music'
                     ? 'music_note'
+                    : link.id === 'art'
+                    ? 'palette'
                     : 'mail'}
                 </span>
                 {link.name}
