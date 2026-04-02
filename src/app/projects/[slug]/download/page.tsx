@@ -2,6 +2,7 @@ import { getProjectBySlug, getProjectSlugs } from '@/data/projects';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
+import { CopyButton } from '@/components/ui/CopyButton';
 
 export async function generateStaticParams() {
   return getProjectSlugs().map((slug) => ({ slug }));
@@ -165,6 +166,22 @@ export default async function DownloadPage({
                 </div>
               )}
             </div>
+            {project.downloads.sha256Checksum && project.downloads.sha256Checksum !== 'Pending' && (
+              <div className="mt-6 pt-6 border-t border-primary/10">
+                <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant block mb-3 flex items-center gap-2">
+                  <MaterialIcon name="verified" size="sm" className="text-primary/70" />
+                  SHA-256 Checksum
+                </span>
+                <div className="flex items-center gap-3 bg-surface border border-primary/10 pl-4 pr-1 py-1 rounded">
+                  <code className="text-[11px] text-primary/80 font-mono break-all flex-1 select-all py-2">
+                    {project.downloads.sha256Checksum}
+                  </code>
+                  <div className="flex-shrink-0 border-l border-primary/10 pl-2 pr-1">
+                    <CopyButton value={project.downloads.sha256Checksum} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Release Notes */}
