@@ -4,9 +4,6 @@ import Link from 'next/link';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { CopyButton } from '@/components/ui/CopyButton';
 
-export async function generateStaticParams() {
-  return getProjectSlugs().map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

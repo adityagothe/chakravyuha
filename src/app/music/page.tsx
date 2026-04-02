@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import Image from 'next/image';
 import { musicArtist, songs } from '@/data/music';
 
 export const metadata: Metadata = {
@@ -16,7 +19,9 @@ export const metadata: Metadata = {
 
 export default function MusicPage() {
   return (
-    <main className="animate-page-in relative pt-24">
+    <>
+      <Navbar />
+      <main className="animate-page-in relative pt-24 min-h-screen">
 
       {/* Back Navigation */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 mb-8">
@@ -78,11 +83,12 @@ export default function MusicPage() {
                 {/* Cover */}
                 <div className="w-full md:w-1/2 aspect-square relative group overflow-hidden shadow-2xl rounded-xl border border-outline-variant/10">
                   {song.coverImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={song.coverImage}
                       alt={song.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                     />
                   ) : (
                     <ImagePlaceholder
@@ -116,7 +122,7 @@ export default function MusicPage() {
                     {streamingLinks.map((link) => (
                       <a
                         key={link.label}
-                        href={link.href!}
+                        href={link.href as string}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 bg-surface-container hover:bg-primary/10 border border-outline-variant/30 hover:border-primary/40 px-5 py-3 rounded transition-all duration-300 group/btn"
@@ -216,5 +222,7 @@ export default function MusicPage() {
         </Link>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

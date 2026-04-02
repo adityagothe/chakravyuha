@@ -7,11 +7,12 @@ import { usePathname } from 'next/navigation';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 
+const SPY_TARGETS = ['hero', 'projects', 'skills', 'about', 'contact'];
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const activeSection = useScrollSpy({ targets: ['hero', 'projects', 'skills', 'about', 'contact'] });
+  const activeSection = useScrollSpy({ targets: SPY_TARGETS });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -19,14 +20,24 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open and handle Escape key
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = 'hidden';
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setMobileOpen(false);
+        }
+      };
+      window.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleEscape);
+      };
     } else {
       document.body.style.overflow = '';
+      return () => { document.body.style.overflow = ''; };
     }
-    return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);

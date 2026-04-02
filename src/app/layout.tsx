@@ -21,17 +21,32 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chakravyuha.vercel.app'), // Replace with actual domain later
+  metadataBase: new URL('https://chakravyuha-aditya-gothe.vercel.app'),
   title: {
-    default: 'CHAKRAVYUHA | Layers of Imagination',
-    template: '%s | CHAKRAVYUHA',
+    default: 'Aditya Gothe — Developer, Creator, Musician | CHAKRAVYUHA',
+    template: '%s | Aditya Gothe',
   },
   description:
-    'Building systems, apps, and ideas — layer by layer. A digital manifestation of architectural precision and visionary engineering.',
+    'Aditya Gothe — building systems, apps, and music layer by layer. A digital manifestation of architectural precision and visionary engineering.',
+  keywords: ['Aditya Gothe', 'developer', 'React Native', 'Habitropolis', 'Vittora', 'Two Stars HQ', 'Chakravyuha'],
+  authors: [{ name: 'Aditya Gothe' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'CHAKRAVYUHA',
+    siteName: 'CHAKRAVYUHA — Aditya Gothe',
+    images: [
+      {
+        url: 'https://chakravyuha-aditya-gothe.vercel.app/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Aditya Gothe portfolio preview',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Aditya Gothe | CHAKRAVYUHA',
+    description: 'Aditya Gothe — building systems, apps, and music layer by layer.',
   },
   robots: { index: true, follow: true },
 };
@@ -52,7 +67,28 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${manrope.variable} ${newsreader.variable} antialiased`}
       >
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] bg-surface p-4 border border-primary text-primary font-bold rounded">
+          Skip to main content
+        </a>
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Aditya Gothe",
+              "url": "https://chakravyuha-aditya-gothe.vercel.app",
+              "jobTitle": "System Builder & Creator",
+              "sameAs": [
+                "https://github.com/adityagothe",
+                "https://www.linkedin.com/in/aditya-gothe-626352383/",
+                "https://www.instagram.com/victor5400_/",
+                "https://open.spotify.com/artist/7y9XCzNr4SgPxSV4cGt3kz"
+              ]
+            })
+          }}
+        />
       </body>
     </html>
   );

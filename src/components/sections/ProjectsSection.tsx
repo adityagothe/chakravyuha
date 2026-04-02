@@ -39,8 +39,8 @@ export function ProjectsSection() {
 
           <FadeIn delay={projects.length * 120} direction="up" className="md:col-span-12">
             <ComingSoonCard
-              title={comingSoonPlaceholder.name!}
-              subtitle={comingSoonPlaceholder.tagline!}
+              title={comingSoonPlaceholder.name ?? 'Coming Soon'}
+              subtitle={comingSoonPlaceholder.tagline ?? 'Something is brewing'}
             />
           </FadeIn>
         </div>

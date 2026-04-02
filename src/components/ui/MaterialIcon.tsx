@@ -5,6 +5,7 @@ interface MaterialIconProps {
   name: string;
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  style?: React.CSSProperties;
 }
 
 const sizeMap = {
@@ -17,9 +18,9 @@ const sizeMap = {
   '4xl': 'text-4xl',
 };
 
-export function MaterialIcon({ name, className, size = 'md' }: MaterialIconProps) {
+export function MaterialIcon({ name, className, size = 'md', style }: MaterialIconProps) {
   return (
-    <span className={cn('material-symbols-outlined', sizeMap[size], className)} data-icon={name}>
+    <span className={cn('material-symbols-outlined', sizeMap[size], className)} data-icon={name} style={style}>
       {name}
     </span>
   );

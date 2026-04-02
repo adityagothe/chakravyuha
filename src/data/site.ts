@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: 'Layers of Imagination',
   description: 'Building systems, apps, and ideas — layer by layer. A digital manifestation of architectural precision and visionary engineering.',
   socials: {
-    github: 'https://github.com/aditya-gothe',
+    github: 'https://github.com/adityagothe',
     linkedin: 'https://www.linkedin.com/in/aditya-gothe-626352383/',
     instagram: 'https://www.instagram.com/victor5400_/',
     instagramAscend: 'https://www.instagram.com/ascend.with.adi/',
@@ -15,7 +15,7 @@ export const siteConfig = {
     music: '/music',
     projects: '/#projects',
     about: '/#about',
-    contact: '#contact',
+    contact: '/#contact',
   },
   copyright: '© CHAKRAVYUHA By Aditya Gothe. SOVEREIGN ARCHIVE.',
 };

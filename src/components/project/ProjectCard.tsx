@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Project } from '@/types/project';
 import { StatusBadge } from '../ui/StatusBadge';
@@ -31,10 +32,12 @@ export function ProjectCard({ project, variant = 'small', className }: ProjectCa
       {/* Cover Image Area */}
       <div className={cn('relative w-full aspect-video overflow-hidden')}>
         {project.coverImage ? (
-          <img
+          <Image
             src={project.coverImage.src}
             alt={project.coverImage.alt}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
           <ImagePlaceholder

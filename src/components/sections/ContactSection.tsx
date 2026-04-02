@@ -6,8 +6,8 @@ import { SectionHeader } from '../ui/SectionHeader';
 import { MaterialIcon } from '../ui/MaterialIcon';
 import { FadeIn } from '@/components/ui/FadeIn';
 
-// Replace this with your own free key from https://web3forms.com
-const WEB3FORMS_KEY = 'cb92872a-c7d8-4832-bbfc-cb17d2f5c172';
+// Fallback to empty string to prevent build issues if env is missing
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
@@ -16,8 +16,41 @@ export function ContactSection() {
   const [formState, setFormState] = useState<FormState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [lastSubmitTime, setLastSubmitTime] = useState(0);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Cooldown logic (30 seconds)
+    const now = Date.now();
+    if (now - lastSubmitTime < 30000) {
+      setFormState('error');
+      setErrorMsg('Please wait a moment before sending another message.');
+      setTimeout(() => setFormState('idle'), 4000);
+      return;
+    }
+
+    // Input validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.name || formData.name.length < 2) {
+      setFormState('error');
+      setErrorMsg('Name must be at least 2 characters long.');
+      setTimeout(() => setFormState('idle'), 4000);
+      return;
+    }
+    if (!emailRegex.test(formData.email)) {
+      setFormState('error');
+      setErrorMsg('Please provide a valid email address.');
+      setTimeout(() => setFormState('idle'), 4000);
+      return;
+    }
+    if (!formData.message || formData.message.length < 10) {
+      setFormState('error');
+      setErrorMsg('Message must be at least 10 characters long.');
+      setTimeout(() => setFormState('idle'), 4000);
+      return;
+    }
+
     setFormState('loading');
     setErrorMsg('');
 
@@ -40,6 +73,7 @@ export function ContactSection() {
       if (data.success) {
         setFormState('success');
         setFormData({ name: '', email: '', message: '' });
+        setLastSubmitTime(Date.now());
         setTimeout(() => setFormState('idle'), 5000);
       } else {
         throw new Error(data.message || 'Submission failed');
@@ -87,7 +121,7 @@ export function ContactSection() {
               <div>
                 <h3 className="font-headline text-2xl font-bold text-on-surface mb-2">Transmission Received</h3>
                 <p className="font-body text-neutral-400 text-sm leading-relaxed">
-                  Your message has been encrypted and delivered. I&apos;ll respond within 24 hours.
+                  Your message has been securely submitted and delivered. I&apos;ll respond within 24 hours.
                 </p>
               </div>
               <button
@@ -161,7 +195,7 @@ export function ContactSection() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
                 <p className="font-label text-[10px] uppercase tracking-[0.15em] text-neutral-600 flex items-center gap-2">
                   <MaterialIcon name="lock" size="sm" className="opacity-60" />
-                  All channels are encrypted
+                  Secure submission via HTTPS
                 </p>
                 <button
                   id="contact-submit"

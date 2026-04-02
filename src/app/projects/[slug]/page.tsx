@@ -29,9 +29,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  return getProjectSlugs().map((slug) => ({ slug }));
-}
 
 export default async function ProjectDetailPage({ params }: Props) {
   const { slug } = await params;
@@ -83,7 +80,6 @@ export default async function ProjectDetailPage({ params }: Props) {
                     name={feature.icon}
                     size="lg"
                     className="text-primary"
-                    // @ts-expect-error - style prop for material icon fill
                     style={{ fontVariationSettings: "'FILL' 1" }}
                   />
                   <span className="font-label text-[11px] uppercase tracking-widest text-on-surface">

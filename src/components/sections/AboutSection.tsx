@@ -32,8 +32,8 @@ export function AboutSection() {
           <FadeIn direction="right" delay={100} className="md:col-span-4 relative flex items-center justify-center">
             <div className="relative w-full max-w-[400px] aspect-[8/11] rounded-xl overflow-hidden border border-outline-variant/20 shadow-2xl group mx-auto">
               <NextImage
-                src="/images/potrait.png"
-                alt="Portrait"
+                src="/images/portrait.png"
+                alt="Portrait of Aditya Gothe"
                 fill
                 priority
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -63,6 +63,7 @@ export function AboutSection() {
                   target={social.href.startsWith('http') ? '_blank' : undefined}
                   rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="group/social flex items-center gap-3 px-5 py-3 rounded-lg border border-outline-variant/15 bg-surface-container/50 hover:border-primary/30 hover:bg-surface-container transition-all duration-300"
+                  aria-label={social.label}
                 >
                   <MaterialIcon
                     name={social.icon}

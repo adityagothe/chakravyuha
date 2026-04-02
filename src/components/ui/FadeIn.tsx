@@ -39,7 +39,6 @@ export function FadeIn({
         opacity: inView ? 1 : 0,
         transform: inView ? 'none' : translateMap[direction],
         transition: `opacity ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms, transform ${duration}ms cubic-bezier(0.25,0.46,0.45,0.94) ${delay}ms`,
-        willChange: 'opacity, transform',
       }}
     >
       {children}
