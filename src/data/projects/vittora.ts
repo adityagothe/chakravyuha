@@ -43,7 +43,7 @@ export const vittora: Project = {
     },
   ],
   downloads: {
-    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/v2.0.0/application-a3ffa707-5e2e-4b46-bbcb-69d0e6c8934c.apk',
+    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/v2.0.0/application-a4296bad-92d7-4dba-8721-043a51eb9054.apk',
     githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/v2.0.0',
     sourceCodeUrl: 'https://github.com/adityagothe/chakravyuha',
     version: '2.0.0',
@@ -52,7 +52,7 @@ export const vittora: Project = {
     releaseNotes: '• v2.0.0 — Financial Sanctuary Update\n• Enhanced UI transitions and focus on discipline\n• Overhauled strategic wealth goal tracking',
     fileSize: '~100 MB',
     minAndroidVersion: 'Android 8.0+',
-    sha256Checksum: 'aad4691425ada492ebb0b85da3b19f7d84637e14a29ed1e37aa8598a1581d7ae',
+    sha256Checksum: 'c70996e97bc969fc915cb2ce2960d91205f9fd48d1858f4399ceecf46c43e7b1',
   },
   techStack: ['React Native', 'Expo', 'SQLite'],
   createdAt: '2026-03-29T00:00:00Z',
