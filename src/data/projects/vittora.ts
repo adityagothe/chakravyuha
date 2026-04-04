@@ -43,8 +43,8 @@ export const vittora: Project = {
     },
   ],
   downloads: {
-    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/v2.1.1/Vittora.apk',
-    githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/v2.1.1',
+    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/V2.1.1/application-c2df9b07-8f1f-4f16-a73b-cc4120f29dfa.apk',
+    githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/V2.1.1',
     sourceCodeUrl: 'https://github.com/adityagothe/chakravyuha',
     version: '2.1.1',
     versionCode: 2,
