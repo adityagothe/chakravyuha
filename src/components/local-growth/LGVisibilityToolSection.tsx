@@ -145,7 +145,7 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                       loading="lazy" 
                       allowFullScreen 
                       referrerPolicy="no-referrer-when-downgrade" 
-                      src={`https://www.google.com/maps/embed/v1/place?key=&q=${city.lat},${city.lng}&zoom=14`}
+                      src={`https://maps.google.com/maps?q=${city.lat},${city.lng}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                     ></iframe>
                     <div className="absolute inset-0 bg-surface/50 pointer-events-none mix-blend-overlay"></div>
                   </div>
@@ -167,7 +167,7 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                       height="100%" 
                       style={{ border: 0, filter: 'hue-rotate(180deg) invert(90%) contrast(150%) brightness(50%)' }} 
                       loading="lazy" 
-                      src={`https://www.google.com/maps/embed/v1/place?key=&q=${city.lat},${city.lng}&zoom=14`}
+                      src={`https://maps.google.com/maps?q=${city.lat},${city.lng}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                     ></iframe>
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                       <div className="absolute w-16 h-16 bg-primary/20 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>

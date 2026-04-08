@@ -28,13 +28,12 @@ export function SearchTerminal({ steps: initialSteps, onComplete }: SearchTermin
     
     // Start step
     if (activeLineIdx === -1) {
-      setSteps(prev => {
-        const next = [...prev];
-        next[activeStepIdx] = { ...next[activeStepIdx], status: 'running' };
-        return next;
-      });
-      
       const timer = setTimeout(() => {
+        setSteps(prev => {
+          const next = [...prev];
+          next[activeStepIdx] = { ...next[activeStepIdx], status: 'running' };
+          return next;
+        });
         setActiveLineIdx(0);
       }, 500); // Wait before first line
       return () => clearTimeout(timer);
