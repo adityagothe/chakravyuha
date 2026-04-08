@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { INDIAN_CITIES } from '@/data/local-growth/cities';
+import { INDIAN_CITIES, GLOBAL_CITY } from '@/data/local-growth/cities';
 import { CityData } from '@/types/local-growth';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +22,8 @@ export function CityAutocomplete({ onSelect, placeholder, disabled }: CityAutoco
     city.state.toLowerCase().includes(query.toLowerCase())
   ).slice(0, 8); // Show max 8 suggestions
 
+  const displayCities = [...filtered, GLOBAL_CITY];
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
@@ -40,15 +42,15 @@ export function CityAutocomplete({ onSelect, placeholder, disabled }: CityAutoco
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActiveIdx(prev => (prev < filtered.length - 1 ? prev + 1 : prev));
+      setActiveIdx(prev => (prev < displayCities.length - 1 ? prev + 1 : prev));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveIdx(prev => (prev > 0 ? prev - 1 : 0));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (filtered[activeIdx]) {
-        onSelect(filtered[activeIdx]);
-        setQuery(filtered[activeIdx].name);
+      if (displayCities[activeIdx]) {
+        onSelect(displayCities[activeIdx]);
+        setQuery(displayCities[activeIdx].name);
         setIsOpen(false);
       }
     } else if (e.key === 'Escape') {
@@ -86,9 +88,9 @@ export function CityAutocomplete({ onSelect, placeholder, disabled }: CityAutoco
         )}
       </div>
 
-      {isOpen && filtered.length > 0 && !disabled && (
+      {isOpen && displayCities.length > 0 && !disabled && (
         <ul className="absolute z-50 top-full left-0 right-0 mt-2 bg-surface-container-high border border-outline-variant/20 rounded shadow-xl max-h-60 overflow-y-auto w-full">
-          {filtered.map((city, idx) => (
+          {displayCities.map((city, idx) => (
             <li
               key={city.name}
               className={cn(

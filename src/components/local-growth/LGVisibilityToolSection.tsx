@@ -42,6 +42,17 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
 
   const recommendedPlanData = report ? pricingContent.plans.find(p => p.tier === report.recommendedPlan) : null;
 
+  const nodeVisuals = React.useMemo(() => {
+    if (phase !== 'searching') return [];
+    return Array.from({ length: 6 }).map((_, i) => {
+      const top = 15 + ((i * 17) % 70);
+      const left = 10 + ((i * 31) % 70);
+      const rotate = ((i * 23) % 45) - 20;
+      const idStr = `NODE-${i}X${Math.floor(top)}`;
+      return { top, left, rotate, idStr };
+    });
+  }, [phase]);
+
   return (
     <SectionWrapper id="visibility-tool" bg="surface-container-low" className="relative overflow-hidden">
       <Container className="relative z-10">
@@ -169,11 +180,49 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                       loading="lazy" 
                       src={`https://maps.google.com/maps?q=${city.lat},${city.lng}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
                     ></iframe>
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    
+                    {/* Visual Overlay Effects */}
+                    <div className="absolute inset-0 pointer-events-none mix-blend-screen relative">
+                      {/* Scanning Laser */}
+                      <div className="absolute left-0 right-0 h-1 bg-primary shadow-[0_0_20px_4px_rgba(233,195,73,0.8)] z-10" style={{ animation: 'scanline 2.5s cubic-bezier(0.5, 0, 0.5, 1) infinite' }}></div>
+                      
+                      {/* Random Data Nodes connected by lines */}
+                      {nodeVisuals.map((node, i) => (
+                        <div key={i} className="absolute flex flex-col gap-1 z-0 animate-fade-in" style={{ 
+                          top: `${node.top}%`, 
+                          left: `${node.left}%`,
+                          animationDelay: `${i * 0.3}s`,
+                        }}>
+                          <div className="flex gap-2 items-center">
+                            <div className="w-2 h-2 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_rgba(255,180,168,0.9)]"></div>
+                            <div className="h-[1px] bg-secondary/50 w-12" style={{ transform: `rotate(${node.rotate}deg)` }}></div>
+                          </div>
+                          <div className="text-[8px] font-mono text-secondary/70 ml-4 font-bold">{node.idStr}</div>
+                        </div>
+                      ))}
+
+                      {/* Cool hacker HUD text */}
+                      <div className="absolute top-4 left-4 bg-surface-container-lowest/80 border border-primary/30 text-primary font-mono text-[10px] px-3 py-2 rounded backdrop-blur">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                          SATELLITE UPLINK: OK
+                        </div>
+                        <div>LAT: {city.lat.toFixed(5)}</div>
+                        <div>LNG: {city.lng.toFixed(5)}</div>
+                        <div className="mt-1 opacity-70">TARGET: {businessName.substring(0, 15)}...</div>
+                      </div>
+
+                      <div className="absolute bottom-4 right-4 bg-surface-container-lowest/80 border border-secondary/30 text-secondary font-mono text-[10px] px-3 py-2 rounded backdrop-blur flex items-center gap-2">
+                        <span className="inline-block w-2 h-2 bg-secondary rounded-full animate-ping"></span>
+                        INTERCEPTING DIRECTORIES...
+                      </div>
+                    </div>
+
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                       <div className="absolute w-16 h-16 bg-primary/20 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
                       <div className="absolute w-32 h-32 border border-primary/40 rounded-full animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
                       <div className="absolute w-64 h-64 border border-primary/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '1s' }}></div>
-                      <span className="material-symbols-outlined text-primary text-4xl drop-shadow-[0_0_10px_rgba(233,195,73,0.8)]" style={{ fontVariationSettings: "'FILL' 1" }}>my_location</span>
+                      <span className="material-symbols-outlined text-primary text-4xl drop-shadow-[0_0_15px_rgba(233,195,73,1)]" style={{ fontVariationSettings: "'FILL' 1" }}>my_location</span>
                     </div>
                   </div>
                 )}
