@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Manrope, Newsreader } from 'next/font/google';
+import { Inter, Manrope, Newsreader, Noto_Sans_Devanagari, Noto_Sans_Kannada } from 'next/font/google';
 import './globals.css';
 import { GoogleAnalytics } from '@/components/layout/GoogleAnalytics';
 
@@ -19,6 +19,20 @@ const newsreader = Newsreader({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-newsreader',
+});
+
+const notoSansDevanagari = Noto_Sans_Devanagari({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['devanagari'],
+  display: 'swap',
+  variable: '--font-devanagari',
+});
+
+const notoSansKannada = Noto_Sans_Kannada({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['kannada'],
+  display: 'swap',
+  variable: '--font-kannada',
 });
 
 export const metadata: Metadata = {
@@ -66,7 +80,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${manrope.variable} ${newsreader.variable} antialiased`}
+        className={`${inter.variable} ${manrope.variable} ${newsreader.variable} ${notoSansDevanagari.variable} ${notoSansKannada.variable} antialiased`}
       >
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] bg-surface p-4 border border-primary text-primary font-bold rounded">
           Skip to main content

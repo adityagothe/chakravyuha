@@ -10,6 +10,12 @@ export function Footer() {
       </div>
       <div className="flex flex-wrap justify-center gap-8 md:gap-12">
         <Link
+          href="/local-growth"
+          className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 hover:text-neutral-200 transition-colors duration-300"
+        >
+          Business
+        </Link>
+        <Link
           href={siteConfig.links.music}
           className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 hover:text-neutral-200 transition-colors duration-300"
         >

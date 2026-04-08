@@ -44,6 +44,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: 'Projects', href: '/#projects', id: 'projects' },
+    { name: 'Business', href: '/local-growth', id: 'local-growth' },
     { name: 'Skills', href: '/#skills', id: 'skills' },
     { name: 'About', href: '/#about', id: 'about' },
     { name: 'Music', href: '/music', id: 'music' },
