@@ -1,3 +1,10 @@
+export interface CityData {
+  name: string;
+  state: string;
+  lat: number;
+  lng: number;
+}
+
 export type Locale = 'en' | 'hi' | 'kn';
 
 // ─── Section Content Types ─────────────────────────────────────────
@@ -67,9 +74,11 @@ export interface LGContent {
     label: string;
     title: string;
     subtitle: string;
-    inputPlaceholder: string;
+    cityLabel: string;
+    cityPlaceholder: string;
+    businessLabel: string;
+    businessPlaceholder: string;
     buttonText: string;
-    loadingText: string;
     resultLabels: {
       scoreHigh: string;
       scoreMedium: string;
@@ -78,6 +87,16 @@ export interface LGContent {
       suggestionsTitle: string;
       checkAgain: string;
       noIssues: string;
+      planCta: string;
+      planCtaSecondary: string;
+    };
+    searchStepTitles: {
+      location: string;
+      google: string;
+      directories: string;
+      web: string;
+      reviews: string;
+      compilation: string;
     };
   };
   servicesDeepDive: {
@@ -189,10 +208,39 @@ export interface LGContent {
 export type VisibilityStatus = 'idle' | 'loading' | 'success' | 'error';
 export type VisibilityScore = 'low' | 'medium' | 'high';
 
+export type SearchStepStatus = 'pending' | 'running' | 'done';
+
+export interface SearchStepLine {
+  text: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  revealed: boolean;
+}
+
+export interface SearchStep {
+  id: string;
+  icon: string;
+  title: string;
+  lines: SearchStepLine[];
+  status: SearchStepStatus;
+}
+
+export interface VisibilityCheck {
+  category: string;
+  icon: string;
+  status: 'pass' | 'warning' | 'fail';
+  detail: string;
+}
+
 export interface VisibilityResult {
-  score: VisibilityScore;
+  score: number;
+  scoreLabel: VisibilityScore;
+  city: string;
+  businessName: string;
   issues: string[];
   suggestions: string[];
+  checks: VisibilityCheck[];
+  recommendedPlan: 'basic' | 'growth' | 'pro';
+  planReasons: string[];
 }
 
 export interface ContactFormData {

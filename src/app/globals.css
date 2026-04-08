@@ -129,6 +129,16 @@ body {
   }
 }
 
+@utility pulse-shadow {
+  animation: pulse-shadow 2.5s infinite;
+}
+
+@keyframes pulse-shadow {
+  0% { box-shadow: 0 0 0 0 rgba(233, 195, 73, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(233, 195, 73, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(233, 195, 73, 0); }
+}
+
 @utility hover-lift {
   transition: all 0.3s ease;
   &:hover {

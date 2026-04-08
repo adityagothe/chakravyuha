@@ -1,39 +1,68 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { VisibilityStatus, VisibilityResult } from '@/types/local-growth';
-import { checkBusinessVisibility } from '@/lib/visibility';
+import { CityData, SearchStep, VisibilityResult, LGContent } from '@/types/local-growth';
+import { generateReport, generateSearchSteps } from '@/lib/visibility';
+
+export type VisibilityPhase = 'city-select' | 'business-input' | 'searching' | 'results';
 
 export function useVisibilityCheck() {
-  const [input, setInput] = useState('');
-  const [status, setStatus] = useState<VisibilityStatus>('idle');
-  const [result, setResult] = useState<VisibilityResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const checkVisibility = useCallback(async () => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
-
-    setStatus('loading');
-    setResult(null);
-    setError(null);
-
-    try {
-      const data = await checkBusinessVisibility(trimmed);
-      setResult(data);
-      setStatus('success');
-    } catch {
-      setError('Could not check visibility. Please try again.');
-      setStatus('error');
-    }
-  }, [input]);
+  const [phase, setPhase] = useState<VisibilityPhase>('city-select');
+  const [city, setCity] = useState<CityData | null>(null);
+  const [businessName, setBusinessName] = useState('');
+  
+  const [report, setReport] = useState<VisibilityResult | null>(null);
+  const [searchSteps, setSearchSteps] = useState<SearchStep[]>([]);
 
   const reset = useCallback(() => {
-    setInput('');
-    setStatus('idle');
-    setResult(null);
-    setError(null);
+    setPhase('city-select');
+    setCity(null);
+    setBusinessName('');
+    setReport(null);
+    setSearchSteps([]);
   }, []);
 
-  return { input, setInput, status, result, error, checkVisibility, reset };
+  const selectCity = useCallback((selectedCity: CityData) => {
+    setCity(selectedCity);
+    setPhase('business-input');
+  }, []);
+
+  const proceedToBusiness = useCallback(() => {
+    if (city) setPhase('business-input');
+  }, [city]);
+
+  const startSearch = useCallback((content: LGContent['visibilityTool']) => {
+    const trimmedName = businessName.trim();
+    if (!city || !trimmedName) return;
+
+    // Generate immediate deterministic report
+    const newReport = generateReport(city, trimmedName);
+    setReport(newReport);
+
+    // Generate steps with final outcomes already known
+    const steps = generateSearchSteps(content, city, trimmedName, newReport);
+    setSearchSteps(steps);
+
+    // Switch to search animation phase
+    setPhase('searching');
+  }, [city, businessName]);
+
+  const finishSearch = useCallback(() => {
+    setPhase('results');
+  }, []);
+
+  return {
+    phase,
+    setPhase,
+    city,
+    selectCity,
+    proceedToBusiness,
+    businessName,
+    setBusinessName,
+    startSearch,
+    finishSearch,
+    searchSteps,
+    report,
+    reset,
+  };
 }

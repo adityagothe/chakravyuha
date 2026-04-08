@@ -33,7 +33,7 @@ export function LGHeroSection({ content }: LGHeroSectionProps) {
           </FadeIn>
           <FadeIn delay={450}>
             <div className="flex flex-wrap gap-6">
-              <GradientButton label={content.ctaPrimary} href="#approach" size="lg" className="crimson-glow" />
+              <GradientButton label={content.ctaPrimary} href="#visibility-tool" size="lg" className="crimson-glow" />
               <OutlineButton label={content.ctaSecondary} href="#services" size="lg" />
             </div>
           </FadeIn>

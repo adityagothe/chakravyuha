@@ -44,7 +44,7 @@ export default function LocalGrowthPage() {
         <LGImpactSection content={content.impact} />
         <LGTargetSection content={content.target} />
         <LGWhyUsSection content={content.whyUs} />
-        <LGVisibilityToolSection content={content.visibilityTool} />
+        <LGVisibilityToolSection content={content.visibilityTool} pricingContent={content.pricing} />
         <LGServicesDeepDiveSection content={content.servicesDeepDive} />
         <LGEducationSection content={content.education} />
         <LGPricingSection content={content.pricing} />

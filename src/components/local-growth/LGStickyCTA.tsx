@@ -24,7 +24,7 @@ export function LGStickyCTA({ content }: Props) {
   }, []);
 
   const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('visibility-tool')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
