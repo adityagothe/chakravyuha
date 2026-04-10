@@ -318,10 +318,11 @@ export function generateSearchSteps(
       return lines;
     }
     return [
-      { text: `Query: "${businessName} near ${city.name}"`, type: 'info', revealed: false },
-      { text: `Initializing 5km spatial grid scan...`, type: 'info', revealed: false },
-      { text: `Checking local cluster nodes [Hash: ${getHash(1)}]...`, type: 'info', revealed: false },
-      { text: isHigh ? `Verified spatial anchor found` : (isMedium ? `Unverified physical location matched` : `Critical fault: No physical anchor point detected`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Query: "${businessName}" location:"${city.name}" lat:${city.lat.toFixed(2)} lng:${city.lng.toFixed(2)}`, type: 'info', revealed: false },
+      { text: `Bypassing geo-restrictions... [OK]`, type: 'info', revealed: false },
+      { text: `Establishing proxy connection to maps.google.com (IP: ${getIp(1)})...`, type: 'info', revealed: false },
+      { text: `Parsing local spatial indexing tree [token: ${getHash(1)}]...`, type: 'info', revealed: false },
+      { text: isHigh ? `✓ Valid Google Business Profile node located` : (isMedium ? `Warning: Profile found but properties incomplete` : `✗ 404 - Profile not found in primary spatial index`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
@@ -339,10 +340,11 @@ export function generateSearchSteps(
       ];
     }
     return [
-      { text: `Initiating multi-thread directory scrape [TCP/80]...`, type: 'info', revealed: false },
-      { text: `Parsing Justdial.com DOM...`, type: 'info', revealed: false },
-      { text: `Parsing Sulekha.com DOM...`, type: 'info', revealed: false },
-      { text: isHigh ? `Consistent NAP (Name/Address/Phone) hashes matched` : (isMedium ? `Warning: Fragmented or conflicting NAP records detected` : `Red flag: Missing from foundational directories`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Deploying web spiders to major Indian B2B/B2C indexes...`, type: 'info', revealed: false },
+      { text: `Querying jd_dataset_v4 (IP: ${getIp(2)})...`, type: 'info', revealed: false },
+      { text: `Querying im_core_db (IP: ${getIp(3)})...`, type: 'info', revealed: false },
+      { text: `Querying sulekha_nodes...`, type: 'info', revealed: false },
+      { text: isHigh ? `✓ Verified consistent NAP records across all sub-nodes` : (isMedium ? `Warning: Fragmented NAP records detected` : `✗ Red flag: Missing from foundational node directories`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
@@ -363,10 +365,10 @@ export function generateSearchSteps(
       ];
     }
     return [
-      { text: `Injecting search params: "${businessName} ${city.name}"`, type: 'info', revealed: false },
-      { text: `Scraping deep index layer... [page_depth=3]`, type: 'info', revealed: false },
-      { text: `Parsing meta tags and schema markup...`, type: 'info', revealed: false },
-      { text: isHigh ? `Dedicated authority domain detected (DA > 20)` : `Null response: No dedicated surface level domain found`, type: isHigh ? 'success' : 'warning', revealed: false },
+      { text: `Initializing global web surface area scan...`, type: 'info', revealed: false },
+      { text: `Analyzing SERP nodes [param=q:"${businessName}" location:"${city.name}"]`, type: 'info', revealed: false },
+      { text: `Decrypting rank headers...`, type: 'info', revealed: false },
+      { text: isHigh ? `✓ Dedicated authority domain detected (DA > 20)` : `✗ Null response: No dedicated surface level domain found`, type: isHigh ? 'success' : 'warning', revealed: false },
     ];
   };
 
@@ -381,9 +383,10 @@ export function generateSearchSteps(
       ];
     }
     return [
-      { text: `Cross-referencing open-source sentiment databases...`, type: 'info', revealed: false },
-      { text: `Executing sentiment analysis on brand mentions...`, type: 'info', revealed: false },
-      { text: isHigh ? `Positive sentiment vector detected` : (isMedium ? `Low volume vector detected` : `0x00 sentiment volume array`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Mapping social graph connections...`, type: 'info', revealed: false },
+      { text: `Scanning Facebook metadata trees...`, type: 'info', revealed: false },
+      { text: `Scanning Instagram biometric footprints...`, type: 'info', revealed: false },
+      { text: isHigh ? `✓ Positive sentiment graph vector mapped` : (isMedium ? `Warning: Low volume social vector detected` : `✗ 0x00 social sentiment volume array`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
@@ -401,9 +404,10 @@ export function generateSearchSteps(
       ];
     }
     return [
-      { text: `Executing localized proximity heuristic...`, type: 'info', revealed: false },
-      { text: `Benchmarking against top 10 local competitors...`, type: 'info', revealed: false },
-      { text: isHigh ? `Dominant local authority` : 'Weak local authority signal', type: isHigh ? 'success' : 'warning', revealed: false },
+      { text: `Correlating local graph signals for area: ${city.name} [radius: 10km]...`, type: 'info', revealed: false },
+      { text: `Computing local authority matrix...`, type: 'info', revealed: false },
+      { text: `Benchmarking against top 10 area competitors...`, type: 'info', revealed: false },
+      { text: isHigh ? `✓ Dominant local authority cluster` : '✗ Weak local authority signal', type: isHigh ? 'success' : 'warning', revealed: false },
     ];
   };
 
