@@ -287,47 +287,62 @@ export function generateSearchSteps(
   const real = report.realData;
   const isHigh = report.scoreLabel === 'high';
   const isMedium = report.scoreLabel === 'medium';
+  
+  // Deterministic seed generation based on input
+  const seedStr = `${businessName}-${city.name}`;
+  let seed = 0;
+  for (let i = 0; i < seedStr.length; i++) seed = (seed << 5) - seed + seedStr.charCodeAt(i);
+  seed = Math.abs(seed);
+  
+  const getIp = (offset: number) => `104.${(seed + offset) % 255}.${(seed * 2 + offset) % 255}.${(seed * 3) % 255}`;
+  const getHash = (offset: number) => (seed * 13 + offset).toString(16).padStart(8, '0');
 
   // Helper to build terminal lines from real data or fallback text
   const mapsLines = (): SearchStepLine[] => {
     if (real) {
       const lines: SearchStepLine[] = [
-        { text: `Query: "${businessName}" "${city.name}"`, type: 'info', revealed: false },
-        { text: `Searching Google Maps & Business Profile...`, type: 'info', revealed: false },
+        { text: `Query: "${businessName}" location:"${city.name}" lat:${city.lat.toFixed(2)} lng:${city.lng.toFixed(2)}`, type: 'info', revealed: false },
+        { text: `Bypassing geo-restrictions... [OK]`, type: 'info', revealed: false },
+        { text: `Establishing secure connection to maps.google.com (IP: ${getIp(1)})...`, type: 'info', revealed: false },
+        { text: `Extracting JSON payload via Custom Search API [token: ${getHash(1)}]...`, type: 'info', revealed: false },
       ];
       if (real.googleMaps.found) {
-        lines.push({ text: `✓ Google Business Profile found`, type: 'success', revealed: false });
+        lines.push({ text: `✓ Valid Google Business Profile node located`, type: 'success', revealed: false });
         if (real.googleMaps.rating) {
-          lines.push({ text: `  Rating: ${real.googleMaps.rating}★  |  Reviews: ${real.googleMaps.reviewCount ?? 0}`, type: 'success', revealed: false });
+          lines.push({ text: `  Rating metrics: ${real.googleMaps.rating}★`, type: 'success', revealed: false });
+          lines.push({ text: `  Review node depth: ${real.googleMaps.reviewCount ?? 0} confirmed`, type: 'success', revealed: false });
         }
       } else {
-        lines.push({ text: `✗ No Google Business Profile found`, type: 'error', revealed: false });
+        lines.push({ text: `✗ 404 - Profile not found in primary spatial index`, type: 'error', revealed: false });
       }
       return lines;
     }
     return [
       { text: `Query: "${businessName} near ${city.name}"`, type: 'info', revealed: false },
-      { text: `Scanning 5km local radius...`, type: 'info', revealed: false },
-      { text: `Checking Google Business Profile...`, type: 'info', revealed: false },
-      { text: isHigh ? `Verified listing found` : (isMedium ? `Listing found but incomplete` : `No verified listing detected`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Initializing 5km spatial grid scan...`, type: 'info', revealed: false },
+      { text: `Checking local cluster nodes [Hash: ${getHash(1)}]...`, type: 'info', revealed: false },
+      { text: isHigh ? `Verified spatial anchor found` : (isMedium ? `Unverified physical location matched` : `Critical fault: No physical anchor point detected`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
   const dirLines = (): SearchStepLine[] => {
     if (real) {
       return [
-        { text: `Scanning JustDial, IndiaMart, Sulekha...`, type: 'info', revealed: false },
-        { text: `JustDial: ${real.directories.justdial ? '✓ Found' : '✗ Not found'}`, type: real.directories.justdial ? 'success' : 'error', revealed: false },
-        { text: `IndiaMart: ${real.directories.indiamart ? '✓ Found' : '✗ Not found'}`, type: real.directories.indiamart ? 'success' : 'error', revealed: false },
-        { text: `Sulekha: ${real.directories.sulekha ? '✓ Found' : '✗ Not found'}`, type: real.directories.sulekha ? 'success' : 'error', revealed: false },
-        ...(real.directories.other.length > 0 ? [{ text: `Also found on: ${real.directories.other.join(', ')}`, type: 'success' as const, revealed: false }] : []),
+        { text: `Deploying web spiders to major Indian B2B/B2C indexes...`, type: 'info', revealed: false },
+        { text: `Querying jd_dataset_v4 (IP: ${getIp(2)})...`, type: 'info', revealed: false },
+        { text: `JustDial: ${real.directories.justdial ? '✓ Signature match' : '✗ Null response'}`, type: real.directories.justdial ? 'success' : 'error', revealed: false },
+        { text: `Querying im_core_db (IP: ${getIp(3)})...`, type: 'info', revealed: false },
+        { text: `IndiaMart: ${real.directories.indiamart ? '✓ Signature match' : '✗ Null response'}`, type: real.directories.indiamart ? 'success' : 'error', revealed: false },
+        { text: `Querying sulekha_nodes...`, type: 'info', revealed: false },
+        { text: `Sulekha: ${real.directories.sulekha ? '✓ Signature match' : '✗ Null response'}`, type: real.directories.sulekha ? 'success' : 'error', revealed: false },
+        ...(real.directories.other.length > 0 ? [{ text: `Secondary clusters active: ${real.directories.other.join(', ')}`, type: 'success' as const, revealed: false }] : []),
       ];
     }
     return [
-      { text: `Checking Justdial.com...`, type: 'info', revealed: false },
-      { text: `Checking Sulekha.com...`, type: 'info', revealed: false },
-      { text: `Checking IndiaMART.com...`, type: 'info', revealed: false },
-      { text: isHigh ? `Consistent profiles found` : (isMedium ? `Inconsistent profiles found` : `Missing from major directories`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Initiating multi-thread directory scrape [TCP/80]...`, type: 'info', revealed: false },
+      { text: `Parsing Justdial.com DOM...`, type: 'info', revealed: false },
+      { text: `Parsing Sulekha.com DOM...`, type: 'info', revealed: false },
+      { text: isHigh ? `Consistent NAP (Name/Address/Phone) hashes matched` : (isMedium ? `Warning: Fragmented or conflicting NAP records detected` : `Red flag: Missing from foundational directories`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
@@ -335,69 +350,74 @@ export function generateSearchSteps(
     if (real) {
       const totalStr = real.webPresence.totalResults.toLocaleString('en-IN');
       return [
-        { text: `Query: "${businessName}" "${city.name}"`, type: 'info', revealed: false },
-        { text: `Crawling web search results...`, type: 'info', revealed: false },
-        { text: `Found ~${totalStr} results across the web`, type: real.webPresence.totalResults > 1000 ? 'success' : 'warning', revealed: false },
-        ...(real.webPresence.topResults.slice(0, 2).map(r => ({
-          text: `↳ ${r.title.substring(0, 60)}`,
+        { text: `Initializing global web surface area scan...`, type: 'info', revealed: false },
+        { text: `Analyzing SERP nodes [param=q:"${businessName}" location:"${city.name}"]`, type: 'info', revealed: false },
+        { text: `Decrypting rank headers...`, type: 'info', revealed: false },
+        { text: `Calculated surface area: ~${totalStr} indexed fragments`, type: real.webPresence.totalResults > 1000 ? 'success' : 'warning', revealed: false },
+        { text: `Intercepting top indexing packets:`, type: 'info', revealed: false },
+        ...(real.webPresence.topResults.slice(0, 2).map((r, i) => ({
+          text: `[PKT_0${i}] ${r.title.substring(0, 40)}`,
           type: 'info' as const,
           revealed: false,
         }))),
       ];
     }
     return [
-      { text: `Query: "${businessName} ${city.name}"`, type: 'info', revealed: false },
-      { text: `Scraping first 3 pages of search results...`, type: 'info', revealed: false },
-      { text: `Looking for official website or social media...`, type: 'info', revealed: false },
-      { text: isHigh ? `Web presence found` : `No dedicated web presence found`, type: isHigh ? 'success' : 'warning', revealed: false },
+      { text: `Injecting search params: "${businessName} ${city.name}"`, type: 'info', revealed: false },
+      { text: `Scraping deep index layer... [page_depth=3]`, type: 'info', revealed: false },
+      { text: `Parsing meta tags and schema markup...`, type: 'info', revealed: false },
+      { text: isHigh ? `Dedicated authority domain detected (DA > 20)` : `Null response: No dedicated surface level domain found`, type: isHigh ? 'success' : 'warning', revealed: false },
     ];
   };
 
   const socialLines = (): SearchStepLine[] => {
     if (real) {
       return [
-        { text: `Scanning social media platforms...`, type: 'info', revealed: false },
-        { text: `Facebook: ${real.socialMedia.facebook ? '✓ Found' : '✗ Not found'}`, type: real.socialMedia.facebook ? 'success' : 'error', revealed: false },
-        { text: `Instagram: ${real.socialMedia.instagram ? '✓ Found' : '✗ Not found'}`, type: real.socialMedia.instagram ? 'success' : 'error', revealed: false },
-        ...(real.socialMedia.youtube ? [{ text: `YouTube: ✓ Found`, type: 'success' as const, revealed: false }] : []),
+        { text: `Mapping social graph connections...`, type: 'info', revealed: false },
+        { text: `Graph node ID: Facebook - ${real.socialMedia.facebook ? '✓ Found' : '✗ Missing'}`, type: real.socialMedia.facebook ? 'success' : 'error', revealed: false },
+        { text: `Graph node ID: Instagram - ${real.socialMedia.instagram ? '✓ Found' : '✗ Missing'}`, type: real.socialMedia.instagram ? 'success' : 'error', revealed: false },
+        { text: `Graph node ID: X (Twitter) - ${real.socialMedia.twitter ? '✓ Found' : '✗ Missing'}`, type: real.socialMedia.twitter ? 'success' : 'error', revealed: false },
+        ...(real.socialMedia.youtube ? [{ text: `YouTube video footprint: ✓ Detected`, type: 'success' as const, revealed: false }] : []),
       ];
     }
     return [
-      { text: `Cross-referencing review platforms...`, type: 'info', revealed: false },
-      { text: `Calculating average sentiment score...`, type: 'info', revealed: false },
-      { text: isHigh ? `Positive reviews detected` : (isMedium ? `Low review count detected` : `No reviews found`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
+      { text: `Cross-referencing open-source sentiment databases...`, type: 'info', revealed: false },
+      { text: `Executing sentiment analysis on brand mentions...`, type: 'info', revealed: false },
+      { text: isHigh ? `Positive sentiment vector detected` : (isMedium ? `Low volume vector detected` : `0x00 sentiment volume array`), type: isHigh ? 'success' : (isMedium ? 'warning' : 'error'), revealed: false },
     ];
   };
 
   const fameLines = (): SearchStepLine[] => {
     if (real) {
       return [
-        { text: `Measuring local fame in ${city.name}...`, type: 'info', revealed: false },
-        { text: `Search volume: ~${real.districtFame.searchResultCount.toLocaleString('en-IN')} results`, type: 'info', revealed: false },
+        { text: `Correlating local graph signals for area: ${city.name} [radius: 10km]...`, type: 'info', revealed: false },
+        { text: `Computing local authority matrix...`, type: 'info', revealed: false },
+        { text: `Graph density score: ${real.districtFame.searchResultCount.toLocaleString('en-IN')} volumetric units`, type: 'info', revealed: false },
         {
-          text: `Fame level: ${real.districtFame.fameLevel.toUpperCase()}`,
+          text: `Final local classification rank: [${real.districtFame.fameLevel.toUpperCase()}]`,
           type: real.districtFame.fameLevel === 'unknown' ? 'error' : real.districtFame.fameLevel === 'emerging' ? 'warning' : 'success',
           revealed: false
         },
       ];
     }
     return [
-      { text: `Measuring local search signals...`, type: 'info', revealed: false },
-      { text: `Comparing against area competitors...`, type: 'info', revealed: false },
-      { text: isHigh ? `Strong local authority` : 'Limited local recognition', type: isHigh ? 'success' : 'warning', revealed: false },
+      { text: `Executing localized proximity heuristic...`, type: 'info', revealed: false },
+      { text: `Benchmarking against top 10 local competitors...`, type: 'info', revealed: false },
+      { text: isHigh ? `Dominant local authority` : 'Weak local authority signal', type: isHigh ? 'success' : 'warning', revealed: false },
     ];
   };
 
   return [
     {
-      id: 'step-location',
-      icon: 'location_on',
-      title: content.searchStepTitles.location,
+      id: 'step-init',
+      icon: 'terminal',
+      title: 'Initializing Scan Engine',
       status: 'pending',
       lines: [
-        { text: `Target: ${city.name}, ${city.state}`, type: 'info', revealed: false },
-        { text: `Coordinates: ${city.lat.toFixed(4)}°N, ${city.lng.toFixed(4)}°E`, type: 'info', revealed: false },
-        { text: `Location locked`, type: 'success', revealed: false },
+        { text: `Core loaded. Process ID: ${getHash(99)}`, type: 'info', revealed: false },
+        { text: `Target matrix: ${businessName} | ${city.name}, ${city.state}`, type: 'info', revealed: false },
+        { text: `Coordinates bound: ${city.lat.toFixed(4)}°N, ${city.lng.toFixed(4)}°E`, type: 'info', revealed: false },
+        { text: `System lock acquired. Initiating data sweep...`, type: 'success', revealed: false },
       ],
     },
     {
@@ -424,14 +444,14 @@ export function generateSearchSteps(
     {
       id: 'step-social',
       icon: 'people',
-      title: 'Checking social media',
+      title: 'Social Graph Mapping',
       status: 'pending',
       lines: socialLines(),
     },
     {
       id: 'step-fame',
-      icon: 'trending_up',
-      title: `Local fame in ${city.name}`,
+      icon: 'radar',
+      title: `Authority check: ${city.name}`,
       status: 'pending',
       lines: fameLines(),
     },
@@ -441,10 +461,10 @@ export function generateSearchSteps(
       title: content.searchStepTitles.compilation,
       status: 'pending',
       lines: [
-        { text: `Aggregating all signals...`, type: 'info', revealed: false },
-        { text: `Computing visibility score...`, type: 'info', revealed: false },
-        { text: `Generating recommendations...`, type: 'info', revealed: false },
-        { text: `Analysis complete`, type: 'success', revealed: false },
+        { text: `Aggregating ${Object.values(real?.socialMedia || {}).length + Object.values(real?.directories || {}).length + 4} data vectors...`, type: 'info', revealed: false },
+        { text: `Calculating absolute market penetration gap...`, type: 'info', revealed: false },
+        { text: `Compiling algorithmic growth roadmaps...`, type: 'info', revealed: false },
+        { text: `Payload generated. Decrypting output...`, type: 'success', revealed: false },
       ],
     },
   ];

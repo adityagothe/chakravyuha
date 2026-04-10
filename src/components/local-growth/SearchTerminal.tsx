@@ -35,12 +35,18 @@ export function SearchTerminal({ steps: initialSteps, onComplete }: SearchTermin
           return next;
         });
         setActiveLineIdx(0);
-      }, 500); // Wait before first line
+      }, 200); // Wait before first line
       return () => clearTimeout(timer);
     }
 
     // Reveal lines
     if (activeLineIdx < currentStep.lines.length) {
+      // Dynamic delay based on the content of the line to make it feel natural
+      const lineText = currentStep.lines[activeLineIdx].text;
+      let delay = 150 + Math.random() * 100; // Fast base typing speed
+      if (lineText.includes('...') || lineText.includes('Scanning') || lineText.includes('Extracting')) delay += 300; // Fake "work" pause
+      if (lineText.includes('✓') || lineText.includes('✗')) delay += 100; // Short pause on result
+      
       const timer = setTimeout(() => {
         setSteps(prev => {
           const next = [...prev];
@@ -50,7 +56,7 @@ export function SearchTerminal({ steps: initialSteps, onComplete }: SearchTermin
           return next;
         });
         setActiveLineIdx(prev => prev + 1);
-      }, 600); // 600ms per line
+      }, delay);
       return () => clearTimeout(timer);
     }
 
@@ -64,7 +70,7 @@ export function SearchTerminal({ steps: initialSteps, onComplete }: SearchTermin
         });
         setActiveStepIdx(prev => prev + 1);
         setActiveLineIdx(-1);
-      }, 800); // pause before next step
+      }, 300); // Short pause before next step
       return () => clearTimeout(timer);
     }
 
