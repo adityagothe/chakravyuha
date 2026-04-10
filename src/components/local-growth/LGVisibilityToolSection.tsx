@@ -182,7 +182,7 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                     ></iframe>
                     
                     {/* Visual Overlay Effects */}
-                    <div className="absolute inset-0 pointer-events-none mix-blend-screen relative">
+                    <div className="absolute inset-0 pointer-events-none mix-blend-screen">
                       {/* Scanning Laser */}
                       <div className="absolute left-0 right-0 h-1 bg-primary shadow-[0_0_20px_4px_rgba(233,195,73,0.8)] z-10" style={{ animation: 'scanline 2.5s cubic-bezier(0.5, 0, 0.5, 1) infinite' }}></div>
                       
@@ -222,7 +222,15 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                       <div className="absolute w-16 h-16 bg-primary/20 rounded-full animate-ping" style={{ animationDuration: '2s' }}></div>
                       <div className="absolute w-32 h-32 border border-primary/40 rounded-full animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
                       <div className="absolute w-64 h-64 border border-primary/20 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '1s' }}></div>
-                      <span className="material-symbols-outlined text-primary text-4xl drop-shadow-[0_0_15px_rgba(233,195,73,1)]" style={{ fontVariationSettings: "'FILL' 1" }}>my_location</span>
+                      
+                      {/* Animated Magnifying Glass */}
+                      <div className="absolute animate-magnify select-none">
+                        <span className="material-symbols-outlined text-primary text-6xl drop-shadow-[0_0_20px_rgba(233,195,73,0.8)]" style={{ fontVariationSettings: "'FILL' 0, 'wght' 200" }}>
+                          search
+                        </span>
+                      </div>
+
+                      <span className="material-symbols-outlined text-primary text-4xl drop-shadow-[0_0_15px_rgba(233,195,73,1)] mt-12" style={{ fontVariationSettings: "'FILL' 1" }}>my_location</span>
                     </div>
                   </div>
                 )}
@@ -304,6 +312,21 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
                           <li key={i} className="flex items-start gap-3 font-body text-sm text-on-surface">
                             <span className="material-symbols-outlined text-secondary text-base mt-0.5 shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>radio_button_checked</span>
                             {issue}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Suggestions */}
+                  {report.suggestions.length > 0 && (
+                    <div>
+                      <h4 className="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-4 font-bold border-b border-outline-variant/10 pb-2">{content.resultLabels.suggestionsTitle}</h4>
+                      <ul className="space-y-3">
+                        {report.suggestions.map((suggestion, i) => (
+                          <li key={i} className="flex items-start gap-3 font-body text-sm text-on-surface">
+                            <span className="material-symbols-outlined text-green-400 text-base mt-0.5 shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>tips_and_updates</span>
+                            {suggestion}
                           </li>
                         ))}
                       </ul>

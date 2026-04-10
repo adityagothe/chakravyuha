@@ -28,13 +28,15 @@ export default function LocalGrowthPage() {
   const { locale } = useLanguage();
   const content = getContent(locale);
 
-  const fontClass =
-    locale === 'hi' ? 'font-[var(--font-devanagari),var(--font-inter),sans-serif]'
-    : locale === 'kn' ? 'font-[var(--font-kannada),var(--font-inter),sans-serif]'
-    : 'font-body';
+  const fontStyle: React.CSSProperties =
+    locale === 'hi'
+      ? { fontFamily: 'var(--font-devanagari), var(--font-inter), sans-serif' }
+      : locale === 'kn'
+      ? { fontFamily: 'var(--font-kannada), var(--font-inter), sans-serif' }
+      : {};
 
   return (
-    <div className={fontClass}>
+    <div style={fontStyle}>
       <LGNavbar />
       <main id="main-content">
         <LGHeroSection content={content.hero} />

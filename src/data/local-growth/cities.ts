@@ -1,14 +1,13 @@
 import { CityData } from '@/types/local-growth';
 
 export const GLOBAL_CITY: CityData = {
-  name: 'Global / Other Search',
+  name: 'Global / Other',
   state: 'Worldwide',
   lat: 20.5937,
   lng: 78.9629 // Center of India, zoomed out
 };
 
-export const INDIAN_CITIES: CityData[] = [
-  // Metro Cities
+export const INDIAN_CITIES = [
   { name: 'Mumbai', state: 'Maharashtra', lat: 19.0760, lng: 72.8777 },
   { name: 'Delhi', state: 'Delhi', lat: 28.7041, lng: 77.1025 },
   { name: 'Bengaluru', state: 'Karnataka', lat: 12.9716, lng: 77.5946 },
@@ -109,5 +108,17 @@ export const INDIAN_CITIES: CityData[] = [
   { name: 'Vijayawada', state: 'Andhra Pradesh', lat: 16.5062, lng: 80.6480 },
   { name: 'Guntur', state: 'Andhra Pradesh', lat: 16.3067, lng: 80.4365 },
   { name: 'Tirupati', state: 'Andhra Pradesh', lat: 13.6288, lng: 79.4192 },
-  { name: 'Warangal', state: 'Telangana', lat: 17.9689, lng: 79.5941 },
+  { name: 'Warangal', state: 'Telangana', lat: 17.9689, lng: 79.5941 }
 ];
+
+export interface StateGroup {
+  state: string;
+  districts: CityData[];
+}
+
+export const STATES_MAP: StateGroup[] = Array.from(
+  new Set(INDIAN_CITIES.map(c => c.state))
+).sort().map(state => ({
+  state,
+  districts: INDIAN_CITIES.filter(c => c.state === state).sort((a, b) => a.name.localeCompare(b.name))
+}));

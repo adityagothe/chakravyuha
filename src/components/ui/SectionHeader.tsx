@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { MaterialIcon } from './MaterialIcon';
 
 interface SectionHeaderProps {
   label: string;

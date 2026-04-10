@@ -147,6 +147,68 @@ body {
   }
 }
 
+@keyframes magnify {
+  0% { transform: scale(1.2) translate(-25%, -25%); opacity: 0.7; }
+  25% { transform: scale(1.4) translate(15%, -15%); opacity: 1; }
+  50% { transform: scale(1.6) translate(5%, 25%); opacity: 0.8; }
+  75% { transform: scale(1.4) translate(-20%, 10%); opacity: 1; }
+  100% { transform: scale(1.2) translate(-25%, -25%); opacity: 0.7; }
+}
+
+@utility animate-magnify {
+  animation: magnify 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(233, 195, 73, 0.6));
+  animation-fill-mode: forwards;
+}
+
+@keyframes magnify-float {
+  0%   { transform: translateY(0px) scale(1);    filter: drop-shadow(0 0 14px rgba(233,195,73,0.7)); }
+  30%  { transform: translateY(-10px) scale(1.08); filter: drop-shadow(0 0 28px rgba(233,195,73,1)); }
+  60%  { transform: translateY(-5px) scale(1.04);  filter: drop-shadow(0 0 18px rgba(233,195,73,0.8)); }
+  100% { transform: translateY(0px) scale(1);    filter: drop-shadow(0 0 14px rgba(233,195,73,0.7)); }
+}
+
+@utility animate-magnify-guide {
+  animation: magnify-float 2.2s ease-in-out infinite;
+}
+
+@keyframes magnify-bob {
+  0%   { transform: rotate(-12deg) scale(1); }
+  50%  { transform: rotate(12deg) scale(1.12); }
+  100% { transform: rotate(-12deg) scale(1); }
+}
+
+@utility animate-magnify-bob {
+  animation: magnify-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes guide-arrow-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50%       { transform: translateY(6px); opacity: 1; }
+}
+
+@utility animate-arrow-bounce {
+  animation: guide-arrow-bounce 1s ease-in-out infinite;
+}
+
+@keyframes guide-fade-in {
+  from { opacity: 0; transform: translateY(-14px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@utility animate-guide-in {
+  animation: guide-fade-in 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes guide-fade-out {
+  from { opacity: 1; transform: translateY(0)    scale(1); }
+  to   { opacity: 0; transform: translateY(-10px) scale(0.85); }
+}
+
+@utility animate-guide-out {
+  animation: guide-fade-out 0.35s ease-in both;
+}
+
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   display: inline-block;

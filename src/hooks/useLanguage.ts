@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext } from 'react';
 import { Locale } from '@/types/local-growth';
 
 interface LanguageContextType {

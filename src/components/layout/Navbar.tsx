@@ -76,7 +76,7 @@ export function Navbar() {
             {navLinks.map((link) => {
               const isActive =
                 activeSection === link.id ||
-                ((link.id === 'music' || link.id === 'art') && link.href === pathname);
+                ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth') && link.href === pathname);
               return (
                 <Link
                   key={link.name}
@@ -165,7 +165,7 @@ export function Navbar() {
           {navLinks.map((link, i) => {
             const isActive =
               activeSection === link.id ||
-              ((link.id === 'music' || link.id === 'art') && link.href === pathname);
+              ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth') && link.href === pathname);
             return (
               <Link
                 key={link.name}

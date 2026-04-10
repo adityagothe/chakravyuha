@@ -1,6 +1,6 @@
 import { ContactFormData } from '@/types/local-growth';
 
-const WEB3FORMS_ACCESS_KEY = 'cb92872a-c7d8-4832-bbfc-cb17d2f5c172'
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || '';
 
 export async function submitContactForm(data: ContactFormData): Promise<{ success: boolean; message?: string }> {
   try {

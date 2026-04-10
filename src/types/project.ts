@@ -80,9 +80,3 @@ export interface MascotInfo {
   description: string;
   image?: ImageAsset | null;
 }
-
-export interface ContactFormData {
-  name: string;
-  email: string;
-  message: string;
-}

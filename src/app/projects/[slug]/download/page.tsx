@@ -203,7 +203,7 @@ export default async function DownloadPage({
                 <p className="font-label text-[10px] uppercase tracking-widest text-on-surface">
                   {project.name}
                 </p>
-                <p className="text-xs text-on-surface-variant">v{project.downloads.version} • {project.downloads.fileSize}</p>
+                <p className="text-xs text-on-surface-variant">v{project.downloads.version}{project.downloads.fileSize ? ` • ${project.downloads.fileSize}` : ''}</p>
               </div>
             </div>
             <span className="material-symbols-outlined text-primary transition-transform group-hover:translate-x-1">arrow_forward</span>
