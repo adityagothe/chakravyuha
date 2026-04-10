@@ -89,6 +89,20 @@ export interface LGContent {
       noIssues: string;
       planCta: string;
       planCtaSecondary: string;
+      // Real search result labels
+      googleMapsFound: string;
+      googleMapsNotFound: string;
+      webPresenceTitle: string;
+      directoriesTitle: string;
+      socialMediaTitle: string;
+      districtFameTitle: string;
+      fameUnknown: string;
+      fameEmerging: string;
+      fameKnown: string;
+      fameFamous: string;
+      fameLegendary: string;
+      realDataBadge: string;
+      fallbackBadge: string;
     };
     searchStepTitles: {
       location: string;
@@ -229,6 +243,63 @@ export interface VisibilityCheck {
   icon: string;
   status: 'pass' | 'warning' | 'fail';
   detail: string;
+  link?: string;
+}
+
+// ─── Real Search Data Types ────────────────────────────────────────
+
+export type DistrictFameLevel = 'unknown' | 'emerging' | 'known' | 'famous' | 'legendary';
+
+export interface GoogleMapsData {
+  found: boolean;
+  rating?: number;
+  reviewCount?: number;
+  address?: string;
+  types?: string[];
+  website?: string;
+  mapsUrl?: string;
+}
+
+export interface WebResultItem {
+  title: string;
+  link: string;
+  snippet: string;
+}
+
+export interface WebPresenceData {
+  totalResults: number;
+  topResults: WebResultItem[];
+}
+
+export interface DirectoryPresence {
+  justdial: boolean;
+  indiamart: boolean;
+  sulekha: boolean;
+  yellowpages: boolean;
+  other: string[];
+}
+
+export interface SocialMediaPresence {
+  facebook: boolean;
+  instagram: boolean;
+  twitter: boolean;
+  youtube: boolean;
+}
+
+export interface DistrictFame {
+  searchResultCount: number;
+  isWellKnown: boolean;
+  fameLevel: DistrictFameLevel;
+  fameSummary: string;
+}
+
+export interface RealSearchData {
+  googleMaps: GoogleMapsData;
+  webPresence: WebPresenceData;
+  directories: DirectoryPresence;
+  socialMedia: SocialMediaPresence;
+  districtFame: DistrictFame;
+  isRealData: true;
 }
 
 export interface VisibilityResult {
@@ -241,6 +312,8 @@ export interface VisibilityResult {
   checks: VisibilityCheck[];
   recommendedPlan: 'basic' | 'growth' | 'pro';
   planReasons: string[];
+  // Real data — present when API search succeeded
+  realData?: RealSearchData;
 }
 
 export interface ContactFormData {
