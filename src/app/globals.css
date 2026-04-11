@@ -64,6 +64,56 @@
   backdrop-filter: blur(24px);
 }
 
+@utility glass-card {
+  background: rgba(20, 20, 19, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(233, 195, 73, 0.12);
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(220, 38, 38, 0); }
+}
+
+@utility animate-pulse-live {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@utility gold-shimmer-text {
+  background: linear-gradient(90deg, #e9c349 0%, #ffe088 40%, #e9c349 60%, #524000 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shimmer 4s linear infinite;
+}
+
+@keyframes bid-flash {
+  0% { background-color: rgba(233, 195, 73, 0); }
+  30% { background-color: rgba(233, 195, 73, 0.12); }
+  100% { background-color: rgba(233, 195, 73, 0); }
+}
+
+@utility animate-bid-flash {
+  animation: bid-flash 1.5s ease-out;
+}
+
+@keyframes countdown-tick {
+  0% { transform: translateY(0); opacity: 1; }
+  45% { transform: translateY(-4px); opacity: 0; }
+  55% { transform: translateY(4px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@utility animate-countdown-tick {
+  animation: countdown-tick 1s ease-in-out;
+}
+
 @utility gold-gradient-text {
   background: linear-gradient(135deg, #e9c349 0%, #524000 100%);
   -webkit-background-clip: text;
