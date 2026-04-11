@@ -50,7 +50,7 @@ function StatusDot({ status }: { status: 'pass' | 'warning' | 'fail' | boolean }
   );
 }
 
-function RealResultsPanel({ report, content }: { report: VisibilityResult; content: LGContent['visibilityTool'] }) {
+function RealResultsPanel({ report }: { report: VisibilityResult }) {
   const real = report.realData!;
 
   return (
@@ -477,7 +477,7 @@ export function LGVisibilityToolSection({ content, pricingContent }: Props) {
 
                 {/* Real Data Results */}
                 {report.realData && searchMode === 'real' ? (
-                  <RealResultsPanel report={report} content={content} />
+                  <RealResultsPanel report={report} />
                 ) : (
                   /* Fallback: traditional checks display */
                   <GlassCard className="p-8 space-y-8">

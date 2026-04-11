@@ -8,6 +8,7 @@ import { UpcomingDropsSection } from '@/components/art/UpcomingDropsSection';
 import { ScarcitySection } from '@/components/art/ScarcitySection';
 import { ComingSoonSection } from '@/components/art/ComingSoonSection';
 import { ArtSocialSection } from '@/components/art/ArtSocialSection';
+import { SecretArtistEntrance } from '@/components/art/SecretArtistEntrance';
 
 export const metadata: Metadata = {
   title: 'Original Artworks — One of One | Live Auction',
@@ -48,6 +49,9 @@ export default function ArtPage() {
         <ArtSocialSection />
       </main>
       <Footer />
+
+      {/* Secret artist entrance — invisible hotspot + Ctrl+Shift+A */}
+      <SecretArtistEntrance />
     </>
   );
 }

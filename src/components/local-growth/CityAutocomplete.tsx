@@ -48,8 +48,8 @@ export function CityAutocomplete({ onSelect, placeholder, disabled, onStateSelec
     if (districtOpen) setTimeout(() => districtInputRef.current?.focus(), 30);
   }, [districtOpen]);
 
-  const activeStateObj = STATES_MAP.find(s => s.state === selectedState);
-  const districts = activeStateObj ? activeStateObj.districts : [];
+  const activeStateObj = useMemo(() => STATES_MAP.find(s => s.state === selectedState), [selectedState]);
+  const districts = useMemo(() => activeStateObj ? activeStateObj.districts : [], [activeStateObj]);
 
   const filteredStates = useMemo(() => {
     if (!stateFilter.trim()) return STATES_MAP;

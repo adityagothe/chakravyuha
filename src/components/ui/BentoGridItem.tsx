@@ -32,6 +32,7 @@ export function BentoGridItem({
     )}>
       {/* Background with placeholder overlay if image fails or before loading */}
       <div className="absolute inset-0 bg-surface-container-low z-0" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img 
         src={imageSrc} 
         alt={imageAlt}

@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { MaterialIcon } from '../ui/MaterialIcon';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 
 const SPY_TARGETS = ['hero', 'projects', 'skills', 'about', 'contact'];

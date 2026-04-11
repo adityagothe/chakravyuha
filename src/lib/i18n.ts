@@ -20,7 +20,6 @@ export function deepMerge<T extends Record<string, any>>(target: T, source: Part
   return output;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isObject(item: unknown): item is Record<string, unknown> {
   return item !== null && typeof item === 'object' && !Array.isArray(item);
 }
