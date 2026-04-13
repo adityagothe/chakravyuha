@@ -40,6 +40,13 @@ export async function DELETE(
   const supabase = getSupabase();
   const { id } = await params;
 
+  // First cascade-delete any related orders to prevent foreign key errors
+  await supabase
+    .from('orders')
+    .delete()
+    .eq('artwork_id', id);
+
+  // Then delete the artwork
   const { error } = await supabase
     .from('artworks')
     .delete()

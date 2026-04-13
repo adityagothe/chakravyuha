@@ -401,9 +401,18 @@ function ManageArtworks({ artworks, onRefresh }: { artworks: Artwork[]; onRefres
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this artwork permanently?')) return;
     setDeleting(id);
-    await fetch(`/api/artworks/${id}`, { method: 'DELETE' });
-    setDeleting(null);
-    onRefresh();
+    try {
+      const res = await fetch(`/api/artworks/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to delete');
+      }
+    } catch (err: any) {
+      alert(`Error deleting artwork: ${err.message}`);
+    } finally {
+      setDeleting(null);
+      onRefresh();
+    }
   };
 
   const handleStatusSave = async (id: string) => {
