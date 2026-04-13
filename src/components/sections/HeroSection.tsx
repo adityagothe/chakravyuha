@@ -21,7 +21,7 @@ export function HeroSection() {
 
         <FadeIn delay={120} direction="up">
           <h1 className="font-headline text-[clamp(3.5rem,14vw,9rem)] font-extrabold tracking-tighter text-on-surface mb-6 md:mb-8 leading-none">
-            CHAKRA<span className="gold-gradient-text">VYUHA</span>
+            VAJRA<span className="gold-gradient-text">VYUHA</span>
             <span className="block text-xl md:text-2xl font-body font-normal text-on-surface-variant/70 mt-2 tracking-widest uppercase">
               by Aditya Gothe
             </span>
