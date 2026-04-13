@@ -145,7 +145,7 @@ export function buildReservationEmailHref(
   }
 ): string {
   const subject = encodeURIComponent(
-    `Reservation Request — "${artwork.title}" | CHAKRAVYUHA`
+    `Reservation Request — "${artwork.title}" | VAJRAVYUHA`
   );
   const body = encodeURIComponent(
     `Hello,\n\nI would like to RESERVE "${artwork.title}" (${artwork.medium}, ${artwork.dimensions}) for ${order.amount}.\n\nI have made the reservation fee payment via Paytm/UPI.\n\nUPI Transaction Reference (UTR): ${order.upi_transaction_id}\n\n— Buyer Details —\nOrder ID: ${order.order_id ?? 'N/A'}\nName: ${order.buyer_name}\nEmail: ${order.buyer_email}\nPhone: ${order.buyer_phone}${order.buyer_whatsapp ? `\nWhatsApp: ${order.buyer_whatsapp}` : ''}${order.buyer_address ? `\nAddress: ${order.buyer_address}` : ''}${order.buyer_pincode ? `\nPIN Code: ${order.buyer_pincode}` : ''}\n\nPlease verify the payment and confirm my 7-day reservation.\n\nThank you.`
@@ -168,7 +168,7 @@ export function buildPurchaseEmailHref(
   }
 ): string {
   const subject = encodeURIComponent(
-    `Purchase Request — "${artwork.title}" | CHAKRAVYUHA`
+    `Purchase Request — "${artwork.title}" | VAJRAVYUHA`
   );
   const body = encodeURIComponent(
     `Hello,\n\nI would like to PURCHASE "${artwork.title}" (${artwork.medium}, ${artwork.dimensions}) for ${order.amount}.\n\nI have made the full payment via Paytm/UPI.\n\nUPI Transaction Reference (UTR): ${order.upi_transaction_id}\n\n— Buyer Details —\nOrder ID: ${order.order_id ?? 'N/A'}\nName: ${order.buyer_name}\nEmail: ${order.buyer_email}\nPhone: ${order.buyer_phone}${order.buyer_whatsapp ? `\nWhatsApp: ${order.buyer_whatsapp}` : ''}\nShipping Address: ${order.buyer_address}${order.buyer_pincode ? `\nPIN Code: ${order.buyer_pincode}` : ''}\n\nPlease verify the UTR and arrange shipping.\n\nThank you.`
@@ -178,10 +178,10 @@ export function buildPurchaseEmailHref(
 
 export function buildShippingNotificationHref(order: Order): string {
   const subject = encodeURIComponent(
-    `Your Artwork is on its Way! 🎁 | ${order.order_id ?? 'CHAKRAVYUHA'}`
+    `Your Artwork is on its Way! 🎁 | ${order.order_id ?? 'VAJRAVYUHA'}`
   );
   const body = encodeURIComponent(
-    `Dear ${order.buyer_name},\n\nGreat news! Your artwork "${order.artwork_title}" has been packed and dispatched! 🎉\n\n📦 Shipped via India Post\nTracking ID: ${order.tracking_id ?? 'N/A'}\nTrack here: https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx\n\nYour Order ID: ${order.order_id ?? 'N/A'}\n\nImportant:\n• A signed Certificate of Authenticity is included in the package.\n• Handle with care — original artwork inside!\n\nFor any questions, simply reply to this email.\n\nWith gratitude,\nCHAKRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+    `Dear ${order.buyer_name},\n\nGreat news! Your artwork "${order.artwork_title}" has been packed and dispatched! 🎉\n\n📦 Shipped via India Post\nTracking ID: ${order.tracking_id ?? 'N/A'}\nTrack here: https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx\n\nYour Order ID: ${order.order_id ?? 'N/A'}\n\nImportant:\n• A signed Certificate of Authenticity is included in the package.\n• Handle with care — original artwork inside!\n\nFor any questions, simply reply to this email.\n\nWith gratitude,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
   );
   return `mailto:${order.buyer_email}?subject=${subject}&body=${body}`;
 }
@@ -189,7 +189,7 @@ export function buildShippingNotificationHref(order: Order): string {
 export function buildWhatsAppShippingHref(order: Order): string {
   const number = (order.buyer_whatsapp ?? order.buyer_phone).replace(/\D/g, '');
   const text = encodeURIComponent(
-    `Hi ${order.buyer_name}! 🎉 Your artwork "${order.artwork_title}" has been shipped via India Post!\n\nTracking ID: ${order.tracking_id ?? 'N/A'}\nTrack here: https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nA signed Certificate of Authenticity is included. 🏷️\n\n– CHAKRAVYUHA`
+    `Hi ${order.buyer_name}! 🎉 Your artwork "${order.artwork_title}" has been shipped via India Post!\n\nTracking ID: ${order.tracking_id ?? 'N/A'}\nTrack here: https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nA signed Certificate of Authenticity is included. 🏷️\n\n– VAJRAVYUHA`
   );
   return `https://wa.me/${number}?text=${text}`;
 }
@@ -205,7 +205,7 @@ export function buildOrderConfirmationEmailHref(order: Order, artwork?: { medium
     : '';
 
   const subject = encodeURIComponent(
-    `✅ Order Confirmed — "${order.artwork_title}" | CHAKRAVYUHA`
+    `✅ Order Confirmed — "${order.artwork_title}" | VAJRAVYUHA`
   );
 
   const mediumLine = artwork?.medium && artwork?.dimensions
@@ -213,7 +213,7 @@ export function buildOrderConfirmationEmailHref(order: Order, artwork?: { medium
     : '';
 
   const body = encodeURIComponent(
-    `Dear ${order.buyer_name},\n\nGreat news! Your payment has been verified and your order is officially confirmed! 🎉\n\n— Order Details —\nOrder ID:        ${order.order_id ?? 'N/A'}\nArtwork:         ${order.artwork_title}\n${mediumLine}Order Type:      ${order.order_type === 'reservation' ? '7-Day Reservation Hold' : 'Direct Purchase'}\nAmount Paid:     ${order.amount}\nPayment Ref:     ${order.upi_transaction_id ?? 'N/A'}\n\n${order.buyer_address ? `— Shipping Details —\nShipping To: ${order.buyer_address}${order.buyer_pincode ? `\nPIN Code: ${order.buyer_pincode}` : ''}\n${deliveryText}\n\n📦 Shipping via India Post:\nYour artwork will be carefully packed and dispatched. Your India Post Tracking ID will be sent to this email as soon as your order ships.\n\n🏷️ A signed Certificate of Authenticity will be included with your artwork.\n\n` : `— What's Next —\nYou have 7 days to complete the remaining balance. Once paid, your artwork ships via India Post and you will receive a Tracking ID on this email.\n\n`}For any questions, simply reply to this email.\n\nWith gratitude,\nCHAKRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+    `Dear ${order.buyer_name},\n\nGreat news! Your payment has been verified and your order is officially confirmed! 🎉\n\n— Order Details —\nOrder ID:        ${order.order_id ?? 'N/A'}\nArtwork:         ${order.artwork_title}\n${mediumLine}Order Type:      ${order.order_type === 'reservation' ? '7-Day Reservation Hold' : 'Direct Purchase'}\nAmount Paid:     ${order.amount}\nPayment Ref:     ${order.upi_transaction_id ?? 'N/A'}\n\n${order.buyer_address ? `— Shipping Details —\nShipping To: ${order.buyer_address}${order.buyer_pincode ? `\nPIN Code: ${order.buyer_pincode}` : ''}\n${deliveryText}\n\n📦 Shipping via India Post:\nYour artwork will be carefully packed and dispatched. Your India Post Tracking ID will be sent to this email as soon as your order ships.\n\n🏷️ A signed Certificate of Authenticity will be included with your artwork.\n\n` : `— What's Next —\nYou have 7 days to complete the remaining balance. Once paid, your artwork ships via India Post and you will receive a Tracking ID on this email.\n\n`}For any questions, simply reply to this email.\n\nWith gratitude,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
   );
 
   return `mailto:${order.buyer_email}?subject=${subject}&body=${body}`;
@@ -226,24 +226,24 @@ export function buildDailyReminderHref(order: Order, day: number): string {
 
   if (day === 1) {
     subject = encodeURIComponent(
-      `Reservation Confirmed — "${order.artwork_title}" | CHAKRAVYUHA`
+      `Reservation Confirmed — "${order.artwork_title}" | VAJRAVYUHA`
     );
     body = encodeURIComponent(
-      `Dear ${order.buyer_name},\n\nYour reservation for "${order.artwork_title}" has been confirmed! 🎉\n\nOrder ID: ${order.order_id ?? 'N/A'}\nReservation Fee Paid: ${order.amount}\n\nYou have 6 days remaining to complete your purchase. Please reply to this email or contact us to arrange the remaining balance and shipping.\n\nReservation expires: ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}\n\nImportant: Once full payment is confirmed, your artwork will be shipped via India Post and you will receive the tracking ID on this email.\n\nWarm regards,\nCHAKRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+      `Dear ${order.buyer_name},\n\nYour reservation for "${order.artwork_title}" has been confirmed! 🎉\n\nOrder ID: ${order.order_id ?? 'N/A'}\nReservation Fee Paid: ${order.amount}\n\nYou have 6 days remaining to complete your purchase. Please reply to this email or contact us to arrange the remaining balance and shipping.\n\nReservation expires: ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}\n\nImportant: Once full payment is confirmed, your artwork will be shipped via India Post and you will receive the tracking ID on this email.\n\nWarm regards,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
     );
   } else if (day >= 2 && day <= 6) {
     subject = encodeURIComponent(
-      `Reminder — ${daysLeft} Day${daysLeft === 1 ? '' : 's'} Left on Your Reservation | CHAKRAVYUHA`
+      `Reminder — ${daysLeft} Day${daysLeft === 1 ? '' : 's'} Left on Your Reservation | VAJRAVYUHA`
     );
     body = encodeURIComponent(
-      `Dear ${order.buyer_name},\n\nThis is a friendly reminder that your reservation for "${order.artwork_title}" has ${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining.\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nPlease complete your payment before your reservation expires on ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}.\n\nTo proceed, simply reply to this email with your full payment UTR reference.\n\nWarm regards,\nCHAKRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+      `Dear ${order.buyer_name},\n\nThis is a friendly reminder that your reservation for "${order.artwork_title}" has ${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining.\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nPlease complete your payment before your reservation expires on ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}.\n\nTo proceed, simply reply to this email with your full payment UTR reference.\n\nWarm regards,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
     );
   } else {
     subject = encodeURIComponent(
-      `FINAL DAY — Your Reservation Expires Today | CHAKRAVYUHA`
+      `FINAL DAY — Your Reservation Expires Today | VAJRAVYUHA`
     );
     body = encodeURIComponent(
-      `Dear ${order.buyer_name},\n\nThis is your FINAL reminder — your reservation for "${order.artwork_title}" expires TODAY.\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nIf the remaining balance is not received by end of day, the artwork will be made available for others.\n\nPlease reply urgently with your payment UTR reference to complete the purchase.\n\nWarm regards,\nCHAKRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+      `Dear ${order.buyer_name},\n\nThis is your FINAL reminder — your reservation for "${order.artwork_title}" expires TODAY.\n\nOrder ID: ${order.order_id ?? 'N/A'}\n\nIf the remaining balance is not received by end of day, the artwork will be made available for others.\n\nPlease reply urgently with your payment UTR reference to complete the purchase.\n\nWarm regards,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
     );
   }
 

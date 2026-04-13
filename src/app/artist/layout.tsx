@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Client-side session guard:
-// SecretArtistEntrance sets sessionStorage['chakravyuha_artist_auth'] = 'true'
+// SecretArtistEntrance sets sessionStorage['vajravyuha_artist_auth'] = 'true'
 // before navigating here. Anyone who types /artist directly is redirected to /art.
 
 export default function ArtistLayout({
@@ -16,7 +16,7 @@ export default function ArtistLayout({
   const [authorized, setAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const flag = sessionStorage.getItem('chakravyuha_artist_auth');
+    const flag = sessionStorage.getItem('vajravyuha_artist_auth');
     if (flag === 'true') {
       setAuthorized(true);
     } else {

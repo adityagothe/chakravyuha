@@ -136,7 +136,7 @@ export default async function DownloadPage({
                 <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
                   architecture
                 </span>
-                Built by Chakravyuha
+                Built by Vajravyuha
               </li>
             </ul>
             <div className="grid grid-cols-2 gap-y-6 border-t border-primary/10 pt-6">

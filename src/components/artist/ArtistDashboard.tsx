@@ -915,7 +915,7 @@ export function ArtistDashboard() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleExit = () => {
-    sessionStorage.removeItem('chakravyuha_artist_auth');
+    sessionStorage.removeItem('vajravyuha_artist_auth');
     router.push('/art');
   };
 
@@ -928,7 +928,7 @@ export function ArtistDashboard() {
       {/* ─── SIDEBAR ─── */}
       <aside className="h-screen w-72 fixed left-0 top-0 bg-surface-container-lowest shadow-[0_0_64px_rgba(233,195,73,0.05)] z-50 flex flex-col py-8 border-r border-outline-variant/10">
         <div className="px-8 mb-12">
-          <h1 className="font-headline text-2xl font-bold tracking-tighter text-primary">CHAKRAVYUHA</h1>
+          <h1 className="font-headline text-2xl font-bold tracking-tighter text-primary">VAJRAVYUHA</h1>
           <p className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 mt-1">The Sovereign Archive</p>
         </div>
 
@@ -1019,7 +1019,7 @@ export function ArtistDashboard() {
 
         <footer className="bg-surface-container-lowest py-6 px-12 border-t border-outline-variant/5">
           <div className="flex justify-between items-center">
-            <span className="font-headline text-lg font-bold text-neutral-700">CHAKRAVYUHA</span>
+            <span className="font-headline text-lg font-bold text-neutral-700">VAJRAVYUHA</span>
             <p className="font-label text-[9px] uppercase tracking-widest text-neutral-800">Private Artist Panel · Restricted Access</p>
           </div>
         </footer>

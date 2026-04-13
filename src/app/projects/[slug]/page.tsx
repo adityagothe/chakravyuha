@@ -135,7 +135,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-on-surface tracking-tight">Built by Chakravyuha</p>
+                  <p className="text-sm font-bold text-on-surface tracking-tight">Built by Vajravyuha</p>
                   <p className="text-xs text-on-surface-variant/60">Verified Developer Signature</p>
                 </div>
               </div>

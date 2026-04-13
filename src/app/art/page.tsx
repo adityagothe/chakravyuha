@@ -8,11 +8,11 @@ import { ArtSocialSection } from '@/components/art/ArtSocialSection';
 import { SecretArtistEntrance } from '@/components/art/SecretArtistEntrance';
 
 export const metadata: Metadata = {
-  title: 'Original Artworks — One of One | CHAKRAVYUHA',
+  title: 'Original Artworks — One of One | VAJRAVYUHA',
   description:
-    'A curated collection of original artworks — each piece created once and never recreated. Reserve or purchase directly. Explore the Sovereign series by CHAKRAVYUHA.',
+    'A curated collection of original artworks — each piece created once and never recreated. Reserve or purchase directly. Explore the Sovereign series by VAJRAVYUHA.',
   openGraph: {
-    title: 'CHAKRAVYUHA | Original Artworks — One of One Collection',
+    title: 'VAJRAVYUHA | Original Artworks — One of One Collection',
     description:
       'Each artwork exists only once. Reserve or acquire a fixed-price original. No reproductions. Permanent sovereign ownership.',
     type: 'website',

@@ -63,8 +63,8 @@ export function ContactSection() {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          subject: `New message from ${formData.name} — Chakravyuha`,
-          from_name: 'Chakravyuha Contact',
+          subject: `New message from ${formData.name} — Vajravyuha`,
+          from_name: 'Vajravyuha Contact',
         }),
       });
 

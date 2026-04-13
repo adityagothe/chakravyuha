@@ -18,7 +18,7 @@ const WHATSAPP_NUMBER = '917869281508';
 export function LGContactSection({ content }: Props) {
   const { formData, errors, status, handleChange, handleBlur, handleSubmit, reset } = useContactForm();
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hello! I found you through Chakravyuha Local Growth and I'd like to know more about growing my business.`)}`;
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hello! I found you through Vajravyuha Local Growth and I'd like to know more about growing my business.`)}`;
 
   return (
     <SectionWrapper id="contact">

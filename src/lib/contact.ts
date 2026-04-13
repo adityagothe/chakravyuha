@@ -9,8 +9,8 @@ export async function submitContactForm(data: ContactFormData): Promise<{ succes
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
         access_key: WEB3FORMS_ACCESS_KEY,
-        subject: `New Inquiry from ${data.name} — Chakravyuha Local Growth`,
-        from_name: 'Chakravyuha Local Growth',
+        subject: `New Inquiry from ${data.name} — Vajravyuha Local Growth`,
+        from_name: 'Vajravyuha Local Growth',
         name: data.name,
         email: data.email,
         phone: data.phone,

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Two Stars HQ — Music by Aditya Gothe',
   description: 'Explore the music of Two Stars HQ — cinematic tracks by Aditya Gothe, available on Spotify, Apple Music, and YouTube.',
   openGraph: {
-    title: 'Two Stars HQ | Chakravyuha Music',
+    title: 'Two Stars HQ | Vajravyuha Music',
     description: 'A different layer of expression. Two songs released on all major platforms.',
     type: 'website',
   },

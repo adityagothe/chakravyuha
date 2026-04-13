@@ -38,17 +38,17 @@ const notoSansKannada = Noto_Sans_Kannada({
 export const metadata: Metadata = {
   metadataBase: new URL('https://chakravyuha-aditya-gothe.vercel.app'),
   title: {
-    default: 'Aditya Gothe — Developer, Creator, Musician | CHAKRAVYUHA',
+    default: 'Aditya Gothe — Developer, Creator, Musician | VAJRAVYUHA',
     template: '%s | Aditya Gothe',
   },
   description:
     'Aditya Gothe — building systems, apps, and music layer by layer. A digital manifestation of architectural precision and visionary engineering.',
-  keywords: ['Aditya Gothe', 'developer', 'React Native', 'Habitropolis', 'Vittora', 'Two Stars HQ', 'Chakravyuha'],
+  keywords: ['Aditya Gothe', 'developer', 'React Native', 'Habitropolis', 'Vittora', 'Two Stars HQ', 'Vajravyuha'],
   authors: [{ name: 'Aditya Gothe' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'CHAKRAVYUHA — Aditya Gothe',
+    siteName: 'VAJRAVYUHA — Aditya Gothe',
     images: [
       {
         url: 'https://chakravyuha-aditya-gothe.vercel.app/og-image.png',
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aditya Gothe | CHAKRAVYUHA',
+    title: 'Aditya Gothe | VAJRAVYUHA',
     description: 'Aditya Gothe — building systems, apps, and music layer by layer.',
   },
   robots: { index: true, follow: true },

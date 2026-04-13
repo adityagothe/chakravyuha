@@ -64,7 +64,7 @@ export function ArtHeroSection() {
           </a>
           <a
             id="hero-enquire-cta"
-            href="mailto:chakravyuha.studio@gmail.com?subject=Art%20Enquiry%20%E2%80%94%20CHAKRAVYUHA"
+            href="mailto:vajra.vyuha.official@gmail.com?subject=Art%20Enquiry%20%E2%80%94%20VAJRAVYUHA"
             className="inline-flex items-center gap-3 border border-primary/30 text-primary font-label font-bold px-8 py-4 uppercase tracking-widest text-sm hover:bg-primary/5 hover:border-primary/60 active:scale-95 transition-all duration-300"
           >
             <MaterialIcon name="mail" size="sm" />

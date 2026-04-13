@@ -70,7 +70,7 @@ export default function NotFound() {
         {/* Decorative line */}
         <div className="mt-16 flex items-center gap-4 text-neutral-700">
           <div className="flex-1 h-px bg-current" />
-          <span className="font-label text-[9px] uppercase tracking-[0.4em]">CHAKRAVYUHA</span>
+          <span className="font-label text-[9px] uppercase tracking-[0.4em]">VAJRAVYUHA</span>
           <div className="flex-1 h-px bg-current" />
         </div>
       </div>

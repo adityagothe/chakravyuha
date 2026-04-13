@@ -73,7 +73,7 @@ export function SecretArtistEntrance() {
       if (code.toUpperCase() === SECRET_CODE.toUpperCase()) {
         setHint('');
         setIsOpen(false);
-        sessionStorage.setItem('chakravyuha_artist_auth', 'true');
+        sessionStorage.setItem('vajravyuha_artist_auth', 'true');
         router.push('/artist');
       } else {
         const newAttempts = attempts + 1;
@@ -219,7 +219,7 @@ export function SecretArtistEntrance() {
 
           {/* Bottom hint — deliberately cryptic */}
           <p className="mt-6 text-center font-label text-[8px] uppercase tracking-widest text-neutral-800">
-            Authorized access only · CHAKRAVYUHA
+            Authorized access only · VAJRAVYUHA
           </p>
         </div>
       </div>

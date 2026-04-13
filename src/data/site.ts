@@ -1,5 +1,5 @@
 export const siteConfig = {
-  name: 'CHAKRAVYUHA',
+  name: 'VAJRAVYUHA',
   tagline: 'Layers of Imagination',
   description: 'Building systems, apps, and ideas — layer by layer. A digital manifestation of architectural precision and visionary engineering.',
   socials: {
@@ -17,5 +17,5 @@ export const siteConfig = {
     about: '/#about',
     contact: '/#contact',
   },
-  copyright: '© CHAKRAVYUHA By Aditya Gothe. SOVEREIGN ARCHIVE.',
+  copyright: '© VAJRAVYUHA By Aditya Gothe. SOVEREIGN ARCHIVE.',
 };

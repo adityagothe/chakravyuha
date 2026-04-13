@@ -97,6 +97,7 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
   const [step, setStep] = useState<Step>('choose');
   const [purchaseType, setPurchaseType] = useState<PurchaseType>('purchase');
   const [loading, setLoading] = useState(false);
+  const [qrError, setQrError] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<{
     order_id: string | null;
     amount: string;
@@ -237,7 +238,7 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
           <div className="flex items-start justify-between p-6 pb-0 shrink-0">
             <div>
               <p className="font-label text-[9px] uppercase tracking-[0.3em] text-primary/50 mb-1">
-                CHAKRAVYUHA · Original Art
+                VAJRAVYUHA · Original Art
               </p>
               <h2 className="font-headline italic text-xl text-on-surface leading-tight">
                 {artwork.title}
@@ -340,7 +341,7 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
                     </div>
                     <p className="font-body text-sm text-red-200 leading-relaxed">
                       After making the payment, your UPI app will show a{' '}
-                      <strong className="text-white">Transaction ID / UTR number</strong>.
+                      <strong className="text-white">UTR number</strong>.
                       {' '}<strong className="text-red-100 underline">Write it down or take a screenshot</strong>{' '}
                       — you must enter it in the next step to prove your payment.
                       Without it, your order cannot be confirmed.
@@ -354,8 +355,8 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
                       { n: '1', text: `Open Paytm, PhonePe, GPay or any UPI app` },
                       { n: '2', text: `Scan the QR code below` },
                       { n: '3', text: `Pay exactly ${purchaseType === 'reservation' ? reservationFee.display : artwork.price}` },
-                      { n: '4', text: `IMPORTANT: Note down or screenshot your Transaction ID / UTR number shown in the app after payment` },
-                      { n: '5', text: `Click the button below and enter that Transaction ID in the next step` },
+                      { n: '4', text: `IMPORTANT: Note down or screenshot your UTR number shown in the app after payment` },
+                      { n: '5', text: `Click the button below and enter that UTR in the next step` },
                     ].map((item) => (
                       <div key={item.n} className="flex items-start gap-3">
                         <span className={cn(
@@ -374,28 +375,29 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
                 {/* QR Code */}
                 <div className="flex justify-center">
                   <div className="relative w-52 h-52 bg-white border-4 border-primary/30 flex items-center justify-center overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/images/paytm-qr.jpeg"
-                      alt="Paytm QR Code"
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none">
-                      <MaterialIcon name="qr_code_2" size="4xl" className="text-neutral-300" />
-                      <span className="font-label text-[8px] uppercase tracking-widest text-neutral-400 text-center px-2">
-                        Add paytm-qr.jpeg to public/images/
-                      </span>
-                    </div>
+                    {qrError ? (
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <MaterialIcon name="qr_code_2" size="4xl" className="text-neutral-300" />
+                        <span className="font-label text-[8px] uppercase tracking-widest text-neutral-400 text-center px-2">
+                          QR code unavailable
+                        </span>
+                      </div>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src="/images/paytm-qr.jpeg"
+                        alt="Paytm QR Code — scan to pay via UPI"
+                        className="w-full h-full object-contain"
+                        onError={() => setQrError(true)}
+                      />
+                    )}
                   </div>
                 </div>
 
                 <div className="bg-amber-950/20 border border-amber-900/30 p-3 text-left flex items-start gap-3">
                   <MaterialIcon name="info" size="sm" className="text-amber-400 shrink-0 mt-0.5" />
                   <p className="font-body text-sm text-amber-200/80 leading-relaxed">
-                    <strong className="text-amber-300">Important:</strong> After paying, go to your UPI app → Payment history → Open this payment → Copy the <strong className="text-amber-200">Transaction ID / UTR number</strong>. You need it in the next step.
+                    <strong className="text-amber-300">Important:</strong> After paying, go to your UPI app → Payment history → Open this payment → Copy the <strong className="text-amber-200">UTR number</strong>. You need it in the next step.
                   </p>
                 </div>
 
@@ -412,7 +414,7 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
                     className="flex-grow-[2] gold-gradient-bg text-on-primary py-3 font-label text-[10px] font-bold uppercase tracking-widest hover:-translate-y-0.5 transition-all shadow-[0_4px_20px_rgba(233,195,73,0.15)] flex items-center justify-center gap-2"
                   >
                     <MaterialIcon name="check" size="sm" />
-                    I&apos;ve Paid — Enter Transaction ID
+                    I&apos;ve Paid — Enter UTR
                   </button>
                 </div>
               </div>
@@ -432,13 +434,13 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
 
                 {/* Explanation box */}
                 <div className="bg-surface-container border border-outline-variant/10 p-4 space-y-3">
-                  <p className="font-label text-[9px] uppercase tracking-widest text-neutral-500">Where to find your Transaction ID?</p>
+                  <p className="font-label text-[9px] uppercase tracking-widest text-neutral-500">Where to find your UTR?</p>
                   <div className="space-y-2">
                     {[
-                      { app: 'Google Pay', path: 'Open GPay → Tap payment → "Transaction ID"' },
+                      { app: 'Google Pay', path: 'Open GPay → Tap payment → "UTR / Transaction ID"' },
                       { app: 'PhonePe', path: 'Open PhonePe → History → Tap payment → "UTR Number"' },
                       { app: 'Paytm', path: 'Open Paytm → Passbook → Tap payment → "Order ID / UTR"' },
-                      { app: 'Any UPI', path: 'Payment receipt SMS → UPI Ref / Transaction Ref number' },
+                      { app: 'Any UPI', path: 'Payment receipt SMS → UTR / UPI Ref number' },
                     ].map((item) => (
                       <div key={item.app} className="flex items-start gap-2">
                         <span className="font-label text-[9px] text-primary shrink-0 w-16">{item.app}</span>

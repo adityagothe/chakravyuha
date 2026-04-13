@@ -3,13 +3,13 @@ import { LGContent } from '@/types/local-growth';
 export const contentEN: LGContent = {
   meta: {
     title: 'Local Growth | The Sovereign Archive',
-    description: 'Chakravyuha helps local businesses get the visibility they deserve.',
+    description: 'Vajravyuha helps local businesses get the visibility they deserve.',
   },
   hero: {
     label: 'Empowering local legacy',
     title: 'We Help Local ',
     titleHighlight: 'Businesses',
-    subtitle: 'Chakravyuha is built to empower small businesses by improving how they appear, compete, and grow in today\'s digital world.',
+    subtitle: 'Vajravyuha is built to empower small businesses by improving how they appear, compete, and grow in today\'s digital world.',
     ctaPrimary: 'Start Growing',
     ctaSecondary: 'Explore Services',
   },
@@ -23,7 +23,7 @@ export const contentEN: LGContent = {
     quote: '"The finest tea in the city shouldn\'t be a secret."',
   },
   services: {
-    title: 'How Chakravyuha Helps You Grow',
+    title: 'How Vajravyuha Helps You Grow',
     items: [
       { icon: 'visibility', title: 'Visibility', description: 'We ensure your business appears exactly where your customers are searching, turning digital intent into physical footfall.' },
       { icon: 'campaign', title: 'Marketing', description: 'Simple, tailored strategies that don\'t require a tech degree. Effective communication designed for the real world.' },
@@ -245,11 +245,11 @@ export const contentEN: LGContent = {
   },
   brandStory: {
     label: 'Our Story',
-    title: 'Why We Built Chakravyuha',
+    title: 'Why We Built Vajravyuha',
     paragraphs: [
       'We watched brilliant local businesses struggle to compete — not because of poor quality, but because they couldn\'t be found. The butcher who had served the same street for 30 years was invisible to anyone who moved in last year.',
       'Digital tools exist to solve this. But they were built for corporations with marketing teams, not for busy shop owners who spend their day serving customers, not managing algorithms.',
-      'Chakravyuha was built to change that. To make the same tools that help big businesses accessible, affordable, and effective for the small businesses that sustain our neighborhoods.',
+      'Vajravyuha was built to change that. To make the same tools that help big businesses accessible, affordable, and effective for the small businesses that sustain our neighborhoods.',
       'We are local. We understand local. And we are here to make your local business unstoppable.',
     ],
     signature: '— Aditya Gothe, Founder',

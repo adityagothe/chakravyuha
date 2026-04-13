@@ -67,7 +67,7 @@ export function Navbar() {
             className="font-headline text-2xl font-bold tracking-tighter text-primary uppercase"
             onClick={closeMobile}
           >
-            CHAKRAVYUHA
+            VAJRAVYUHA
           </Link>
 
           {/* Desktop Nav */}
@@ -228,7 +228,7 @@ export function Navbar() {
             Get in Touch
           </Link>
           <p className="text-center font-label text-[9px] uppercase tracking-widest text-neutral-600 mt-4">
-            © CHAKRAVYUHA — Sovereign Archive
+            © VAJRAVYUHA — Sovereign Archive
           </p>
         </div>
       </aside>

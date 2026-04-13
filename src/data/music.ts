@@ -1,7 +1,7 @@
 export const musicArtist = {
   name: 'TWO STARS HQ',
   tagline: 'A different layer of expression.',
-  description: 'Music that mirrors the same depth, discipline, and vision behind every system built under the Chakravyuha banner.',
+  description: 'Music that mirrors the same depth, discipline, and vision behind every system built under the Vajravyuha banner.',
   spotifyUrl: 'https://open.spotify.com/artist/7y9XCzNr4SgPxSV4cGt3kz',
   youtubeUrl: 'https://youtube.com/@victor5400_parasf',
   instagramUrl: 'https://www.instagram.com/victor5400_/',
@@ -13,7 +13,7 @@ export const songs = [
     title: 'TWO STARS RISING',
     tagline: 'The opening theme of the Sovereign Archive.',
     description:
-      'This track was composed to mirror the complexity of the Chakravyuha itself — a rising melody that builds layer by layer, transitioning from a single pulse into something far greater.',
+      'This track was composed to mirror the complexity of the Vajravyuha itself — a rising melody that builds layer by layer, transitioning from a single pulse into something far greater.',
     coverImage: null,
     links: {
       spotify: 'https://open.spotify.com/artist/7y9XCzNr4SgPxSV4cGt3kz',
