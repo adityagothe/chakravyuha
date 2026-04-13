@@ -1,162 +1,137 @@
-export type ArtworkStatus = 'available' | 'sold' | 'auction' | 'upcoming';
+// ─────────────────────────────────────────────────────────────────────────────
+// Artworks Data — source of truth is Supabase (artworks table).
+// This file ONLY contains the TypeScript types and helper functions.
+// Artwork data is fetched live from the DB via API routes.
+// ─────────────────────────────────────────────────────────────────────────────
 
-export interface BidEntry {
-  user: string;
-  amount: string;
-  time: string;
-}
+export type ArtworkStatus = 'available' | 'sold' | 'reserved' | 'coming_soon';
 
 export interface Artwork {
   id: string;
   title: string;
   description: string;
-  image: string | null; // null → ImagePlaceholder fallback
+  /** Supabase Storage public URL or null */
+  image_url: string | null;
   price: string;
+  /** For filtering / sorting */
+  price_number: number;
   status: ArtworkStatus;
   medium: string;
   dimensions: string;
-  // Auction-specific fields
-  auctionId?: string;
-  highestBid?: string;
-  startingBid?: string;
-  timeRemaining?: string; // display string, e.g. "04:12:55"
-  bidders?: number;
-  watchers?: number;
-  bidHistory?: BidEntry[];
-  // Upcoming-specific fields
-  dropCountdown?: string; // display string, e.g. "03D : 14H : 22M"
-  dropDate?: string;
+  /** ISO 8601 string — when the 7-day reservation expires */
+  reserved_until: string | null;
+  reserved_by_name: string | null;
+  reserved_by_email: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-const ENQUIRY_EMAIL = 'chakravyuha.studio@gmail.com';
-
-export const artworks: Artwork[] = [
-  {
-    id: '1',
-    title: 'The Gilded Cage',
-    description:
-      'A meditation on the constraints of divine lineage. The figure stands bound by golden threads that simultaneously adorn and imprison — beauty inseparable from its burden.',
-    image: null,
-    price: '₹4,50,000',
-    status: 'auction',
-    medium: 'Mixed media on canvas',
-    dimensions: '48 × 48 in',
-    auctionId: 'CH-9042',
-    highestBid: '₹3,45,000',
-    startingBid: '₹1,50,000',
-    timeRemaining: '04:12:55',
-    bidders: 18,
-    watchers: 247,
-    bidHistory: [
-      { user: 'User_882', amount: '₹3,45,000', time: '2m ago' },
-      { user: 'Karthik_A', amount: '₹3,20,000', time: '11m ago' },
-      { user: 'ZenithArt', amount: '₹3,10,000', time: '24m ago' },
-      { user: 'Anon-429', amount: '₹2,90,000', time: '41m ago' },
-    ],
-  },
-  {
-    id: '2',
-    title: 'Echoes of Indra',
-    description:
-      'Capturing the resonance of celestial storms through overlapping Sanskrit glyphs and circuitry — ancient frequency colliding with synthetic hum.',
-    image: null,
-    price: '₹3,20,000',
-    status: 'sold',
-    medium: 'Digital pigment print on archival paper',
-    dimensions: '36 × 48 in',
-  },
-  {
-    id: '3',
-    title: 'Ritual Mask IV',
-    description:
-      'Part of the "Modern Myth" series. The mask as persona, the persona as truth. Hand-embellished with real gold leaf across the crown.',
-    image: null,
-    price: '₹5,80,000',
-    status: 'available',
-    medium: 'Acrylic & gold leaf on linen',
-    dimensions: '30 × 40 in',
-  },
-  {
-    id: '4',
-    title: 'Sovereign Dark',
-    description:
-      'A composition born from stillness. Layers of obsidian ink pulled across textured ground, interrupted only by a single luminous thread — the moment before dawn.',
-    image: null,
-    price: '₹6,20,000',
-    status: 'available',
-    medium: 'Ink & resin on wood panel',
-    dimensions: '24 × 36 in',
-  },
-  {
-    id: '5',
-    title: 'Ashura Rising',
-    description:
-      'The demon-god in motion — not of destruction but of creative chaos. Every stroke a deliberate contradiction, every colour a paradox of identity.',
-    image: null,
-    price: '₹7,00,000',
-    status: 'sold',
-    medium: 'Oil on stretched canvas',
-    dimensions: '40 × 60 in',
-  },
-  {
-    id: '6',
-    title: 'The Last Yuga',
-    description:
-      'Kali Yuga rendered in quiet horror — not as apocalypse but as the mundane forgetting of sacred things. Muted golds dissolve into grey.',
-    image: null,
-    price: '₹5,10,000',
-    status: 'available',
-    medium: 'Watercolour & charcoal on paper',
-    dimensions: '22 × 30 in',
-  },
-  {
-    id: '7',
-    title: 'Celestial Bloom',
-    description:
-      'A fractal explosion of sacred geometry — each petal a universe collapsing inward. The first work in the upcoming Cosmos series.',
-    image: null,
-    price: '₹8,00,000',
-    status: 'upcoming',
-    medium: 'Oil & gold leaf on canvas',
-    dimensions: '60 × 60 in',
-    dropCountdown: '03D : 14H : 22M',
-    dropDate: 'April 15, 2026',
-  },
-  {
-    id: '8',
-    title: 'Shadow Architect',
-    description:
-      'The silent builder of unseen structures — form emerging from void. A study in negative space and implied mass across deep obsidian layers.',
-    image: null,
-    price: '₹6,50,000',
-    status: 'upcoming',
-    medium: 'Ink & silver leaf on panel',
-    dimensions: '36 × 48 in',
-    dropCountdown: '08D : 04H : 12M',
-    dropDate: 'April 20, 2026',
-  },
-];
-
-export function buildEnquiryHref(artwork: Artwork): string {
-  const subject = encodeURIComponent(`Enquiry — "${artwork.title}" (One of One)`);
-  const body = encodeURIComponent(
-    `Hello,\n\nI am interested in acquiring "${artwork.title}" (${artwork.medium}, ${artwork.dimensions}, ${artwork.price}).\n\nPlease share availability and next steps.\n\nThank you.`
-  );
-  return `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
+export interface Order {
+  id: string;
+  artwork_id: string;
+  artwork_title: string;
+  buyer_name: string;
+  buyer_email: string;
+  buyer_phone: string;
+  buyer_address: string | null;
+  order_type: 'reservation' | 'purchase';
+  amount: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'expired' | 'cancelled';
+  reserved_until: string | null;
+  /** How many daily reminder emails have been sent (0–7) */
+  day_reminder_sent: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
-export function buildBidHref(artwork: Artwork, bidAmount: string): string {
-  const subject = encodeURIComponent(`Bid Submission — "${artwork.title}" (${artwork.auctionId ?? ''})`);
-  const body = encodeURIComponent(
-    `Hello,\n\nI would like to place a bid of ${bidAmount} on "${artwork.title}" (Auction ID: ${artwork.auctionId ?? 'N/A'}).\n\nPlease confirm receipt and next steps.\n\nThank you.`
+const STUDIO_EMAIL = 'chakravyuha.studio@gmail.com';
+
+// ─── Email helpers ────────────────────────────────────────────────────────────
+
+export function buildReservationEmailHref(artwork: Artwork, order: {
+  buyer_name: string;
+  buyer_email: string;
+  buyer_phone: string;
+  amount: string;
+}): string {
+  const subject = encodeURIComponent(
+    `Reservation Request — "${artwork.title}" | CHAKRAVYUHA`
   );
-  return `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
+  const body = encodeURIComponent(
+    `Hello,\n\nI would like to RESERVE "${artwork.title}" (${artwork.medium}, ${artwork.dimensions}) for ${order.amount}.\n\nI have made the reservation fee payment via Paytm QR.\n\n— Buyer Details —\nName: ${order.buyer_name}\nEmail: ${order.buyer_email}\nPhone: ${order.buyer_phone}\n\nPlease confirm my 7-day reservation.\n\nThank you.`
+  );
+  return `mailto:${STUDIO_EMAIL}?subject=${subject}&body=${body}`;
 }
 
-export function buildNotifyHref(artwork: Artwork, email: string): string {
-  const subject = encodeURIComponent(`Notify Me — "${artwork.title}" Drop`);
-  const body = encodeURIComponent(
-    `Hello,\n\nPlease notify me when "${artwork.title}" drops (expected: ${artwork.dropDate ?? 'TBD'}).\n\nEmail: ${email}\n\nThank you.`
+export function buildPurchaseEmailHref(artwork: Artwork, order: {
+  buyer_name: string;
+  buyer_email: string;
+  buyer_phone: string;
+  buyer_address: string;
+  amount: string;
+}): string {
+  const subject = encodeURIComponent(
+    `Purchase Request — "${artwork.title}" | CHAKRAVYUHA`
   );
-  return `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
+  const body = encodeURIComponent(
+    `Hello,\n\nI would like to PURCHASE "${artwork.title}" (${artwork.medium}, ${artwork.dimensions}) for ${order.amount}.\n\nI have made the full payment via Paytm QR.\n\n— Buyer Details —\nName: ${order.buyer_name}\nEmail: ${order.buyer_email}\nPhone: ${order.buyer_phone}\nShipping Address: ${order.buyer_address}\n\nPlease confirm and arrange shipping.\n\nThank you.`
+  );
+  return `mailto:${STUDIO_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+export function buildDailyReminderHref(order: Order, day: number): string {
+  const daysLeft = 7 - day;
+  let subject = '';
+  let body = '';
+
+  if (day === 1) {
+    subject = encodeURIComponent(
+      `Reservation Confirmed — "${order.artwork_title}" | CHAKRAVYUHA`
+    );
+    body = encodeURIComponent(
+      `Dear ${order.buyer_name},\n\nYour reservation for "${order.artwork_title}" has been confirmed!\n\nYou have 6 days remaining to complete your purchase. Please reply to this email or contact us to arrange the final payment and shipping.\n\nReservation expires: ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}\n\nWarm regards,\nCHAKRAVYUHA Studio`
+    );
+  } else if (day >= 2 && day <= 6) {
+    subject = encodeURIComponent(
+      `Reminder — ${daysLeft} Day${daysLeft === 1 ? '' : 's'} Left on Your Reservation | CHAKRAVYUHA`
+    );
+    body = encodeURIComponent(
+      `Dear ${order.buyer_name},\n\nThis is a friendly reminder that your reservation for "${order.artwork_title}" has ${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining.\n\nPlease complete your purchase before your reservation expires on ${order.reserved_until ? new Date(order.reserved_until).toLocaleDateString('en-IN', { dateStyle: 'long' }) : 'N/A'}.\n\nTo proceed, simply reply to this email.\n\nWarm regards,\nCHAKRAVYUHA Studio`
+    );
+  } else {
+    subject = encodeURIComponent(
+      `Final Day — Your Reservation Expires Tomorrow | CHAKRAVYUHA`
+    );
+    body = encodeURIComponent(
+      `Dear ${order.buyer_name},\n\nThis is your final reminder — your reservation for "${order.artwork_title}" expires TOMORROW.\n\nIf you do not complete the purchase by end of day, the artwork will be made available again.\n\nPlease reply urgently to complete your purchase.\n\nWarm regards,\nCHAKRAVYUHA Studio`
+    );
+  }
+
+  return `mailto:${order.buyer_email}?subject=${subject}&body=${body}`;
+}
+
+/** Returns how many days into the 7-day hold we are (1-indexed). Returns null if not reserved. */
+export function getReservationDay(order: Order): number | null {
+  if (!order.reserved_until) return null;
+  const created = new Date(order.created_at).getTime();
+  const now = Date.now();
+  const daysPassed = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+  return Math.min(daysPassed + 1, 7);
+}
+
+/** True if 7-day reservation window has expired */
+export function isReservationExpired(reservedUntil: string | null): boolean {
+  if (!reservedUntil) return false;
+  return new Date(reservedUntil).getTime() < Date.now();
+}
+
+/** Returns days remaining string, e.g. "5 days remaining" */
+export function reservationCountdown(reservedUntil: string): string {
+  const ms = new Date(reservedUntil).getTime() - Date.now();
+  if (ms <= 0) return 'Expired';
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  if (days > 0) return `${days}d ${hours}h remaining`;
+  return `${hours}h remaining`;
 }

@@ -73,6 +73,7 @@ export function SecretArtistEntrance() {
       if (code.toUpperCase() === SECRET_CODE.toUpperCase()) {
         setHint('');
         setIsOpen(false);
+        sessionStorage.setItem('chakravyuha_artist_auth', 'true');
         router.push('/artist');
       } else {
         const newAttempts = attempts + 1;
