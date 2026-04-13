@@ -29,11 +29,20 @@ export async function POST(req: NextRequest) {
   const supabase = getSupabase();
   const body = await req.json();
   const {
-    artwork_id, artwork_title, buyer_name, buyer_email,
-    buyer_phone, buyer_address, order_type, amount,
+    artwork_id,
+    artwork_title,
+    buyer_name,
+    buyer_email,
+    buyer_phone,
+    buyer_whatsapp,
+    buyer_address,
+    buyer_pincode,
+    order_type,
+    amount,
+    upi_transaction_id,
   } = body;
 
-  if (!artwork_id || !buyer_name || !buyer_email || !buyer_phone || !order_type || !amount) {
+  if (!artwork_id || !buyer_name || !buyer_email || !buyer_phone || !order_type || !amount || !upi_transaction_id) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
@@ -43,14 +52,34 @@ export async function POST(req: NextRequest) {
       ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
       : null;
 
-  // Create the order
+  // Generate a human-readable order ID: CHK-{YEAR}-{COUNT}
+  const year = new Date().getFullYear();
+  const { count } = await supabase.from('orders').select('*', { count: 'exact', head: true });
+  const seq = String((count ?? 0) + 1).padStart(4, '0');
+  const order_id = `CHK-${year}-${seq}`;
+
+  // Create the order — status starts as pending_verification (UTR must be verified)
   const { data: order, error: orderError } = await supabase
     .from('orders')
     .insert([{
-      artwork_id, artwork_title, buyer_name, buyer_email,
-      buyer_phone, buyer_address: buyer_address ?? null,
-      order_type, amount, status: 'pending',
-      reserved_until, day_reminder_sent: 0, notes: null,
+      order_id,
+      artwork_id,
+      artwork_title,
+      buyer_name,
+      buyer_email,
+      buyer_phone,
+      buyer_whatsapp: buyer_whatsapp ?? null,
+      buyer_address: buyer_address ?? null,
+      buyer_pincode: buyer_pincode ?? null,
+      order_type,
+      amount,
+      status: 'pending_verification',
+      reserved_until,
+      upi_transaction_id,
+      payment_verified: false,
+      tracking_id: null,
+      day_reminder_sent: 0,
+      notes: null,
     }])
     .select()
     .single();
@@ -59,7 +88,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: orderError.message }, { status: 500 });
   }
 
-  // Update artwork status
+  // Update artwork status to reserved/sold optimistically (will revert if payment fails)
   const newStatus = order_type === 'reservation' ? 'reserved' : 'sold';
   const artworkUpdate: Record<string, unknown> = {
     status: newStatus,
