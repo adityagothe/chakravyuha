@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
+import { supabase } from '@/lib/supabase';
 import {
   Artwork,
   Order,
@@ -325,11 +326,44 @@ function AddArtwork({ onAdded }: { onAdded: () => void }) {
         </div>
 
         <div>
-          <label className={labelClass}>Image URL (optional)</label>
-          <input type="url" value={form.image_url} onChange={e => handleChange('image_url', e.target.value)}
-            placeholder="https://your-supabase.co/storage/v1/object/public/art/..." className={inputClass} />
+          <label className={labelClass}>Artwork Image</label>
+          <input 
+            type="file" 
+            accept="image/*"
+            disabled={loading}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              
+              setLoading(true);
+              setError('Uploading image...');
+              try {
+                const { v4: uuidv4 } = await import('uuid');
+                const fileExt = file.name.split('.').pop() || 'jpg';
+                const fileName = `${uuidv4()}.${fileExt}`;
+                
+                const { error: uploadError } = await supabase.storage
+                  .from('art')
+                  .upload(fileName, file);
+                  
+                if (uploadError) throw uploadError;
+                
+                const { data } = supabase.storage
+                  .from('art')
+                  .getPublicUrl(fileName);
+                  
+                handleChange('image_url', data.publicUrl);
+                setError('');
+              } catch (err: any) {
+                setError(err.message || 'Error uploading image. Is your bucket public?');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className={inputClass}
+          />
           <p className="mt-2 font-label text-[9px] text-neutral-700">
-            Upload to Supabase Storage → Copy public URL → Paste here. Or leave blank to show a placeholder.
+            Select an image to automatically upload it to your database.
           </p>
         </div>
 
@@ -361,7 +395,7 @@ function AddArtwork({ onAdded }: { onAdded: () => void }) {
 function ManageArtworks({ artworks, onRefresh }: { artworks: Artwork[]; onRefresh: () => void }) {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editStatus, setEditStatus] = useState<Artwork['status']>('available');
+  const [editDraft, setEditDraft] = useState<Partial<Artwork>>({});
   const [saving, setSaving] = useState(false);
 
   const handleDelete = async (id: string) => {
@@ -374,10 +408,15 @@ function ManageArtworks({ artworks, onRefresh }: { artworks: Artwork[]; onRefres
 
   const handleStatusSave = async (id: string) => {
     setSaving(true);
+    let priceNumber = 0;
+    if (editDraft.price) {
+      priceNumber = parseFloat(editDraft.price.replace(/[^\d.]/g, '')) || 0;
+    }
+    
     await fetch(`/api/artworks/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: editStatus }),
+      body: JSON.stringify({ ...editDraft, ...(editDraft.price ? { price_number: priceNumber } : {}) }),
     });
     setSaving(false);
     setEditingId(null);
@@ -426,32 +465,41 @@ function ManageArtworks({ artworks, onRefresh }: { artworks: Artwork[]; onRefres
               </p>
             )}
 
-            {/* Status editor */}
+            {/* Full Editor */}
             {editingId === artwork.id ? (
-              <div className="flex gap-2 items-center">
+              <div className="flex flex-col gap-3 border-t border-outline-variant/10 pt-3">
+                <input type="text" value={editDraft.title ?? ''} onChange={e => setEditDraft(d => ({ ...d, title: e.target.value }))} placeholder="Title" className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none" />
+                <textarea value={editDraft.description ?? ''} onChange={e => setEditDraft(d => ({ ...d, description: e.target.value }))} placeholder="Description" rows={3} className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none resize-none" />
+                <input type="text" value={editDraft.price ?? ''} onChange={e => setEditDraft(d => ({ ...d, price: e.target.value }))} placeholder="Price (₹)" className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none" />
+                <div className="flex gap-2">
+                  <input type="text" value={editDraft.medium ?? ''} onChange={e => setEditDraft(d => ({ ...d, medium: e.target.value }))} placeholder="Medium" className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none" />
+                  <input type="text" value={editDraft.dimensions ?? ''} onChange={e => setEditDraft(d => ({ ...d, dimensions: e.target.value }))} placeholder="Dimensions" className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none" />
+                </div>
                 <select
-                  value={editStatus}
-                  onChange={e => setEditStatus(e.target.value as Artwork['status'])}
-                  className="flex-1 bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-1.5 px-2 focus:outline-none"
+                  value={editDraft.status ?? 'available'}
+                  onChange={e => setEditDraft(d => ({ ...d, status: e.target.value as Artwork['status'] }))}
+                  className="w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none"
                 >
                   <option value="available">Available</option>
                   <option value="coming_soon">Coming Soon</option>
                   <option value="reserved">Reserved</option>
                   <option value="sold">Sold</option>
                 </select>
-                <button onClick={() => handleStatusSave(artwork.id)} disabled={saving}
-                  className="font-label text-[9px] uppercase tracking-widest text-primary border border-primary/30 px-3 py-1.5 hover:bg-primary/5 transition-colors disabled:opacity-50">
-                  {saving ? '…' : 'Save'}
-                </button>
-                <button onClick={() => setEditingId(null)}
-                  className="font-label text-[9px] uppercase tracking-widest text-neutral-600 px-2 py-1.5">
-                  ✕
-                </button>
+                <div className="flex gap-2 pt-2">
+                  <button onClick={() => setEditingId(null)}
+                    className="flex-1 font-label text-[9px] uppercase tracking-widest text-neutral-600 border border-outline-variant/20 py-1.5 hover:bg-surface-container">
+                    Cancel
+                  </button>
+                  <button onClick={() => handleStatusSave(artwork.id)} disabled={saving}
+                    className="flex-1 font-label text-[9px] uppercase tracking-widest text-primary border border-primary/30 py-1.5 hover:bg-primary/5 disabled:opacity-50">
+                    {saving ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex gap-2">
                 <button
-                  onClick={() => { setEditingId(artwork.id); setEditStatus(artwork.status); }}
+                  onClick={() => { setEditingId(artwork.id); setEditDraft({ title: artwork.title, description: artwork.description, price: artwork.price, medium: artwork.medium, dimensions: artwork.dimensions, status: artwork.status }); }}
                   className="flex-1 font-label text-[9px] uppercase tracking-widest text-neutral-500 border border-outline-variant/20 py-2 hover:border-outline-variant/40 hover:text-on-surface transition-all"
                 >
                   Edit Status
