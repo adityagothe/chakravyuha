@@ -1,10 +1,23 @@
 import { MetadataRoute } from 'next';
 import { getProjectSlugs } from '@/data/projects';
 
-const BASE_URL = 'https://chakravyuha-aditya-gothe.vercel.app';
+const BASE_URL = 'https://vajravyuha.in';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getArtworkIds(): Promise<string[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/artworks`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!Array.isArray(data)) return [];
+    return data.map((a: { id: string }) => a.id);
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projectSlugs = getProjectSlugs();
+  const artworkIds = await getArtworkIds();
 
   const projectRoutes = projectSlugs.flatMap((slug) => [
     {
@@ -20,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
   ]);
+
+  const artworkRoutes = artworkIds.map((id) => ({
+    url: `${BASE_URL}/art/${id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }));
 
   return [
     {
@@ -37,8 +57,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${BASE_URL}/art`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: `${BASE_URL}/local-growth`,
@@ -47,5 +67,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     ...projectRoutes,
+    ...artworkRoutes,
   ];
 }

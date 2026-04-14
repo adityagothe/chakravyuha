@@ -36,7 +36,7 @@ const notoSansKannada = Noto_Sans_Kannada({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chakravyuha-aditya-gothe.vercel.app'),
+  metadataBase: new URL('https://vajravyuha.in'),
   title: {
     default: 'Aditya Gothe — Developer, Creator, Musician | VAJRAVYUHA',
     template: '%s | Aditya Gothe',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: 'VAJRAVYUHA — Aditya Gothe',
     images: [
       {
-        url: 'https://chakravyuha-aditya-gothe.vercel.app/og-image.png',
+        url: 'https://vajravyuha.in/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Aditya Gothe portfolio preview',
@@ -93,7 +93,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": "Aditya Gothe",
-              "url": "https://chakravyuha-aditya-gothe.vercel.app",
+              "url": "https://vajravyuha.in",
               "jobTitle": "System Builder & Creator",
               "sameAs": [
                 "https://github.com/adityagothe",

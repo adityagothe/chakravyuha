@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { Artwork, reservationCountdown, isReservationExpired } from '@/data/artworks';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { PurchaseModal } from './PurchaseModal';
+import { buildWhatsAppShareUrl } from '@/lib/share';
 
 interface ArtworkCardProps {
   artwork: Artwork;
@@ -35,7 +37,7 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
         )}
         aria-label={artwork.title}
       >
-        {/* ── Image ── */}
+        {/* ── Image (links to detail page) ── */}
         <div
           className={cn(
             'aspect-square overflow-hidden relative bg-surface-container',
@@ -43,24 +45,39 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
             isComingSoon && 'grayscale opacity-50'
           )}
         >
+          <Link href={`/art/${artwork.id}`} aria-label={`View details for ${artwork.title}`} className="block w-full h-full">
           {artwork.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={artwork.image_url}
-              alt={artwork.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          ) : (
-            <ImagePlaceholder
-              label={artwork.title}
-              icon="palette"
-              accentColor="#353535"
-              className="w-full h-full rounded-none"
-            />
-          )}
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={artwork.image_url}
+                alt={artwork.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            ) : (
+              <ImagePlaceholder
+                label={artwork.title}
+                icon="palette"
+                accentColor="#353535"
+                className="w-full h-full rounded-none"
+              />
+            )}
+          </Link>
 
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-40 pointer-events-none" />
+
+          {/* Share icon — top-left */}
+          <a
+            id={`artwork-card-share-${artwork.id}`}
+            href={buildWhatsAppShareUrl(artwork)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="absolute top-4 left-4 w-8 h-8 bg-surface/70 backdrop-blur-sm border border-outline-variant/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary/10 hover:border-primary/40 z-10"
+            aria-label={`Share ${artwork.title} on WhatsApp`}
+          >
+            <MaterialIcon name="share" size="sm" className="text-primary" />
+          </a>
 
           {/* ── Status badge ── */}
           <div

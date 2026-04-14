@@ -269,3 +269,26 @@ body {
   white-space: nowrap;
   direction: ltr;
 }
+
+/* ── Touch: allow pinch-to-zoom inside the image viewer ───────────────────── */
+.viewer-touch-area {
+  touch-action: none;
+}
+
+/* ── Share toast pop animation ────────────────────────────────────────────── */
+@keyframes toast-pop {
+  0%   { opacity: 0; transform: translateY(6px) scale(0.95); }
+  30%  { opacity: 1; transform: translateY(0)   scale(1); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-4px) scale(0.97); }
+}
+
+@utility animate-toast-pop {
+  animation: toast-pop 2s ease-in-out both;
+}
+
+/* ── Zoom transition helper ────────────────────────────────────────────────── */
+@utility zoom-transition {
+  transition: transform 0.2s ease;
+  will-change: transform;
+}

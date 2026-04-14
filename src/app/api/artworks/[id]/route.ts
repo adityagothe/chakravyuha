@@ -10,6 +10,26 @@ function getSupabase() {
   );
 }
 
+// GET /api/artworks/[id] — fetch single artwork
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const supabase = getSupabase();
+  const { id } = await params;
+
+  const { data, error } = await supabase
+    .from('artworks')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) {
+    return NextResponse.json({ error: 'Artwork not found' }, { status: 404 });
+  }
+  return NextResponse.json(data);
+}
+
 // PATCH /api/artworks/[id] — update artwork
 export async function PATCH(
   req: NextRequest,
