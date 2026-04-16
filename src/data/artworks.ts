@@ -289,3 +289,63 @@ export function reservationCountdown(reservedUntil: string): string {
   if (days > 0) return `${days}d ${hours}h remaining`;
   return `${hours}h remaining`;
 }
+
+// ─── Bid types ───────────────────────────────────────────────────────────────
+
+export type BidStatus = 'pending' | 'accepted' | 'countered' | 'declined';
+
+export interface Bid {
+  id: string;
+  artwork_id: string;
+  artwork_title: string;
+  /** Display string e.g. "₹3,500" */
+  bid_amount: string;
+  bid_amount_number: number;
+  buyer_name: string;
+  buyer_email: string;
+  buyer_phone: string;
+  buyer_whatsapp: string | null;
+  /** Optional message from buyer to artist */
+  message: string | null;
+  status: BidStatus;
+  /** Artist's counter-offer amount (if status === 'countered') */
+  artist_counter_amount: string | null;
+  /** Artist's message back to buyer */
+  artist_message: string | null;
+  /** Whether the artist has viewed this bid */
+  read: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ─── Bid email helpers ────────────────────────────────────────────────────────
+
+export function buildBidAcceptedEmailHref(bid: Bid): string {
+  const subject = encodeURIComponent(
+    `✅ Your Offer Was Accepted — "${bid.artwork_title}" | VAJRAVYUHA`
+  );
+  const body = encodeURIComponent(
+    `Dear ${bid.buyer_name},\n\nGreat news! Your offer of ${bid.bid_amount} for "${bid.artwork_title}" has been accepted! 🎉\n\nTo complete the purchase, please proceed with payment via Paytm/UPI:\n• Pay ${bid.bid_amount} using the QR code at vajravyuha.in/art\n• After paying, click "I've Paid" and enter your UTR number to place the order.\n\nYour artwork will be shipped via India Post after payment is verified.\n🏷️ A signed Certificate of Authenticity will be included.\n\nFor any questions, simply reply to this email.\n\nWith gratitude,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+  );
+  return `mailto:${bid.buyer_email}?subject=${subject}&body=${body}`;
+}
+
+export function buildBidCounterEmailHref(bid: Bid, counterAmount: string, artistMsg: string): string {
+  const subject = encodeURIComponent(
+    `Counter-Offer for "${bid.artwork_title}" | VAJRAVYUHA`
+  );
+  const body = encodeURIComponent(
+    `Dear ${bid.buyer_name},\n\nThank you for your offer of ${bid.bid_amount} for "${bid.artwork_title}".\n\nI'd like to offer you a counter-price of ${counterAmount}.${artistMsg ? `\n\n${artistMsg}` : ''}\n\nIf you'd like to proceed at this price, please visit vajravyuha.in/art and use the "Make an Offer" option with your updated amount, or reply to this email and we can arrange directly.\n\nWith gratitude,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+  );
+  return `mailto:${bid.buyer_email}?subject=${subject}&body=${body}`;
+}
+
+export function buildBidDeclinedEmailHref(bid: Bid): string {
+  const subject = encodeURIComponent(
+    `Regarding Your Offer — "${bid.artwork_title}" | VAJRAVYUHA`
+  );
+  const body = encodeURIComponent(
+    `Dear ${bid.buyer_name},\n\nThank you so much for your interest in "${bid.artwork_title}" and for taking the time to make an offer.\n\nUnfortunately, I'm unable to accept the offer of ${bid.bid_amount} at this time. The artwork remains available at its listed price.\n\nI'd love for you to explore the rest of the collection at vajravyuha.in/art — there may be something that speaks to you at a different price point.\n\nThank you again for your support of my work. It truly means a lot.\n\nWith gratitude,\nVAJRAVYUHA Studio\nvajra.vyuha.official@gmail.com`
+  );
+  return `mailto:${bid.buyer_email}?subject=${subject}&body=${body}`;
+}

@@ -7,6 +7,7 @@ import { Artwork, isReservationExpired, reservationCountdown } from '@/data/artw
 import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { PurchaseModal } from './PurchaseModal';
+import { BidModal } from './BidModal';
 import { ImageViewer } from './ImageViewer';
 import {
   buildWhatsAppShareUrl,
@@ -24,6 +25,7 @@ interface ArtworkDetailViewProps {
 export function ArtworkDetailView({ artwork }: ArtworkDetailViewProps) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [bidModalOpen, setBidModalOpen] = useState(false);
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'insta-copied'>('idle');
 
   const isSold = artwork.status === 'sold';
@@ -241,6 +243,15 @@ export function ArtworkDetailView({ artwork }: ArtworkDetailViewProps) {
                     <MaterialIcon name="bookmark" size="sm" />
                     Reserve — 7-Day Hold
                   </button>
+                  <button
+                    id="detail-make-offer-btn"
+                    onClick={() => setBidModalOpen(true)}
+                    className="w-full border border-outline-variant/20 text-neutral-400 font-label text-[10px] font-bold py-3.5 uppercase tracking-widest flex items-center justify-center gap-2 hover:border-primary/30 hover:text-primary transition-all"
+                    aria-label={`Make an offer for ${artwork.title}`}
+                  >
+                    <MaterialIcon name="gavel" size="sm" />
+                    Make an Offer — Negotiate Price
+                  </button>
                 </>
               )}
               {isSold && (
@@ -422,6 +433,15 @@ export function ArtworkDetailView({ artwork }: ArtworkDetailViewProps) {
           artwork={artwork}
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
+        />
+      )}
+
+      {/* Bid Modal */}
+      {isAvailable && (
+        <BidModal
+          artwork={artwork}
+          isOpen={bidModalOpen}
+          onClose={() => setBidModalOpen(false)}
         />
       )}
     </>

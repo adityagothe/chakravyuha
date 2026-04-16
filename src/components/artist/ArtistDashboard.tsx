@@ -8,9 +8,13 @@ import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { supabase } from '@/lib/supabase';
 import {
   Artwork,
+  Bid,
   Doodle,
   Order,
   OrderStatus,
+  buildBidAcceptedEmailHref,
+  buildBidCounterEmailHref,
+  buildBidDeclinedEmailHref,
   buildDailyReminderHref,
   buildOrderConfirmationEmailHref,
   buildShippingNotificationHref,
@@ -30,6 +34,7 @@ const NAV_ITEMS = [
   { id: 'add-doodle',      label: 'Add Doodle',       icon: 'draw' },
   { id: 'manage-doodles',  label: 'Manage Doodles',   icon: 'gesture' },
   { id: 'orders',          label: 'Orders',           icon: 'receipt_long' },
+  { id: 'bids',            label: 'Bids',             icon: 'gavel' },
   { id: 'settings',        label: 'Settings',         icon: 'settings' },
 ] as const;
 
@@ -73,8 +78,9 @@ function OrderStatusBadge({ status }: { status: OrderStatus }) {
 
 // ─── Dashboard Overview ───────────────────────────────────────────────────────
 
-function DashboardOverview({ artworks, orders, doodles }: { artworks: Artwork[]; orders: Order[]; doodles: Doodle[] }) {
+function DashboardOverview({ artworks, orders, doodles, bids }: { artworks: Artwork[]; orders: Order[]; doodles: Doodle[]; bids: Bid[] }) {
   const needsVerification = orders.filter(o => o.status === 'pending_verification').length;
+  const pendingBids = bids.filter(b => b.status === 'pending').length;
 
   const stats = [
     { label: 'Total Artworks', value: artworks.length,                                                          icon: 'palette',      sub: 'In collection' },
@@ -126,28 +132,6 @@ function DashboardOverview({ artworks, orders, doodles }: { artworks: Artwork[];
               <p className="font-headline italic text-4xl text-on-surface">{s.value}</p>
               <div className="mt-4 flex items-center gap-2">
                 {s.pulse && s.value > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
-                <span className={cn('font-label text-[9px] uppercase tracking-widest', s.color ?? 'text-neutral-600')}>{s.sub}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Doodles Stats */}
-      <div>
-        <div className="flex items-center gap-3 mb-4">
-          <span className="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/70">✏️ My Doodles</span>
-          <div className="flex-1 h-px bg-outline-variant/20" />
-        </div>
-        <div className="grid grid-cols-2 xl:grid-cols-3 gap-5">
-          {doodleStats.map((s) => (
-            <div key={s.label} className="bg-surface-container-low border border-outline-variant/5 p-6 group hover:bg-surface-container-high transition-colors">
-              <div className="flex justify-between items-start mb-8">
-                <span className="font-label text-[10px] uppercase tracking-widest text-neutral-500">{s.label}</span>
-                <MaterialIcon name={s.icon} size="md" className="text-on-surface-variant/20 group-hover:text-on-surface-variant/50 transition-colors" />
-              </div>
-              <p className="font-headline italic text-4xl text-on-surface">{s.value}</p>
-              <div className="mt-4">
                 <span className={cn('font-label text-[9px] uppercase tracking-widest', s.color ?? 'text-neutral-600')}>{s.sub}</span>
               </div>
             </div>
@@ -856,7 +840,394 @@ function OrdersPanel({ orders, onRefresh, artworks }: { orders: Order[]; onRefre
   );
 }
 
-// ─── Add Doodle ───────────────────────────────────────────────────────────────
+// ─── Bids Panel — Chat Messenger UI ──────────────────────────────────────────
+
+function BidsPanel({ bids, artworks, onRefresh }: { bids: Bid[]; artworks: Artwork[]; onRefresh: () => void }) {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [composeMode, setComposeMode] = useState<'counter' | null>(null);
+  const [counterAmount, setCounterAmount] = useState('');
+  const [counterMsg, setCounterMsg] = useState('');
+  const chatEndRef = React.useRef<HTMLDivElement>(null);
+
+  // Group bids by artwork
+  const grouped: Record<string, { title: string; bids: Bid[] }> = {};
+  for (const bid of bids) {
+    if (!grouped[bid.artwork_id]) grouped[bid.artwork_id] = { title: bid.artwork_title, bids: [] };
+    grouped[bid.artwork_id].bids.push(bid);
+  }
+  const artworkPrices: Record<string, number> = {};
+  for (const a of artworks) artworkPrices[a.id] = a.price_number;
+
+  const conversationList = Object.entries(grouped).map(([id, g]) => ({
+    artworkId: id,
+    title: g.title,
+    bids: g.bids,
+    unread: g.bids.filter(b => !b.read && b.status === 'pending').length,
+    latest: g.bids[0],
+  }));
+
+  // Auto-select first conversation
+  React.useEffect(() => {
+    if (!selectedId && conversationList.length > 0) {
+      setSelectedId(conversationList[0].artworkId);
+    }
+  }, [conversationList.length, selectedId]);
+
+  React.useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedId]);
+
+  const patchBid = async (id: string, patch: Record<string, unknown>) => {
+    setActionLoading(id);
+    await fetch(`/api/bids/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    });
+    setActionLoading(null);
+    onRefresh();
+  };
+
+  const handleAccept = (bid: Bid) => {
+    if (!confirm(`Accept ${bid.buyer_name}'s offer of ${bid.bid_amount}?`)) return;
+    patchBid(bid.id, { status: 'accepted', read: true });
+    setTimeout(() => { window.location.href = buildBidAcceptedEmailHref(bid); }, 300);
+  };
+
+  const handleCounter = async (bid: Bid) => {
+    const amount = counterAmount.trim();
+    if (!amount) { alert('Enter a counter-offer amount first.'); return; }
+    await patchBid(bid.id, { status: 'countered', artist_counter_amount: amount, artist_message: counterMsg || null, read: true });
+    setComposeMode(null); setCounterAmount(''); setCounterMsg('');
+    setTimeout(() => { window.location.href = buildBidCounterEmailHref(bid, amount, counterMsg); }, 300);
+  };
+
+  const handleDecline = (bid: Bid) => {
+    if (!confirm(`Decline ${bid.buyer_name}'s offer of ${bid.bid_amount}?`)) return;
+    patchBid(bid.id, { status: 'declined', read: true });
+    setTimeout(() => { window.location.href = buildBidDeclinedEmailHref(bid); }, 300);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this bid?')) return;
+    await fetch(`/api/bids/${id}`, { method: 'DELETE' });
+    onRefresh();
+  };
+
+  if (bids.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+        <MaterialIcon name="chat_bubble_outline" size="4xl" className="text-neutral-700" />
+        <p className="font-headline italic text-2xl text-neutral-600">No conversations yet</p>
+        <p className="font-label text-[10px] uppercase tracking-widest text-neutral-700 max-w-xs mx-auto">
+          When visitors click &ldquo;Make an Offer&rdquo; on your artworks, their messages appear here.
+        </p>
+      </div>
+    );
+  }
+
+  const activeConv = conversationList.find(c => c.artworkId === selectedId);
+  const listedPrice = selectedId ? (artworkPrices[selectedId] ?? 0) : 0;
+  const activePendingBid = activeConv?.bids.find(b => b.status === 'pending') ?? null;
+
+  return (
+    <div className="flex h-[calc(100vh-14rem)] border border-outline-variant/10 overflow-hidden">
+
+      {/* ── LEFT: Conversation list ─────────────────────────────────────── */}
+      <div className="w-72 shrink-0 border-r border-outline-variant/10 flex flex-col bg-surface-container-lowest">
+        <div className="px-5 py-4 border-b border-outline-variant/10 shrink-0">
+          <p className="font-label text-[9px] uppercase tracking-widest text-neutral-600">
+            {bids.filter(b => b.status === 'pending').length} pending · {bids.length} total
+          </p>
+        </div>
+        <div className="flex-1 overflow-y-auto divide-y divide-outline-variant/5">
+          {conversationList.map((conv) => {
+            const isSelected = conv.artworkId === selectedId;
+            return (
+              <button
+                key={conv.artworkId}
+                onClick={() => { setSelectedId(conv.artworkId); setComposeMode(null); setCounterAmount(''); setCounterMsg(''); }}
+                className={cn(
+                  'w-full text-left px-5 py-4 transition-all flex flex-col gap-1.5 border-l-2',
+                  isSelected ? 'bg-primary/8 border-l-primary' : 'hover:bg-surface-container border-l-transparent'
+                )}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <p className={cn('font-label text-xs leading-snug', isSelected ? 'text-primary' : 'text-on-surface')}>
+                    {conv.title}
+                  </p>
+                  {conv.unread > 0 && (
+                    <span className="w-5 h-5 bg-primary text-on-primary rounded-full flex items-center justify-center font-label text-[8px] font-bold shrink-0 animate-pulse">
+                      {conv.unread}
+                    </span>
+                  )}
+                </div>
+                <p className="font-label text-[9px] text-primary/70 font-bold">{conv.latest.bid_amount}</p>
+                <p className="font-label text-[8px] text-neutral-600 truncate">
+                  {conv.latest.buyer_name} · {new Date(conv.latest.created_at).toLocaleDateString('en-IN', { dateStyle: 'short' })}
+                </p>
+                <div className="flex flex-wrap gap-1 mt-0.5">
+                  {conv.bids.some(b => b.status === 'pending') && (
+                    <span className="font-label text-[7px] uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5">Pending</span>
+                  )}
+                  {conv.bids.some(b => b.status === 'accepted') && (
+                    <span className="font-label text-[7px] uppercase tracking-widest text-green-400 bg-green-950/30 px-1.5 py-0.5">Accepted</span>
+                  )}
+                  {conv.bids.some(b => b.status === 'countered') && (
+                    <span className="font-label text-[7px] uppercase tracking-widest text-amber-400 bg-amber-950/30 px-1.5 py-0.5">Countered</span>
+                  )}
+                  {conv.bids.some(b => b.status === 'declined') && (
+                    <span className="font-label text-[7px] uppercase tracking-widest text-neutral-600 bg-surface-container px-1.5 py-0.5">Declined</span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── RIGHT: Chat thread ──────────────────────────────────────────── */}
+      {activeConv ? (
+        <div className="flex-1 flex flex-col min-w-0 bg-surface">
+
+          {/* Chat header */}
+          <div className="px-6 py-4 border-b border-outline-variant/10 bg-surface-container-low shrink-0 flex items-center gap-4">
+            <div className="w-10 h-10 bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+              <MaterialIcon name="palette" size="sm" className="text-primary/70" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-headline italic text-lg text-on-surface truncate">{activeConv.title}</p>
+              <p className="font-label text-[9px] uppercase tracking-widest text-neutral-600">
+                Listed at ₹{listedPrice.toLocaleString('en-IN')} · {activeConv.bids.length} offer{activeConv.bids.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+            {activePendingBid && (
+              <span className="font-label text-[8px] uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 shrink-0 animate-pulse">
+                {activeConv.bids.filter(b => b.status === 'pending').length} pending
+              </span>
+            )}
+          </div>
+
+          {/* Messages */}
+          <div
+            className="flex-1 overflow-y-auto px-6 py-6 space-y-6"
+            style={{ background: 'repeating-linear-gradient(180deg, transparent, transparent 39px, rgba(255,255,255,0.012) 40px)' }}
+          >
+            {activeConv.bids.slice().reverse().map((bid) => {
+              const priceDiff = listedPrice > 0 ? Math.round(((bid.bid_amount_number - listedPrice) / listedPrice) * 100) : 0;
+
+              return (
+                <div key={bid.id} className="space-y-2">
+
+                  {/* Buyer bubble — LEFT */}
+                  <div className="flex gap-3 items-end">
+                    <div className="w-8 h-8 bg-surface-container border border-outline-variant/20 flex items-center justify-center shrink-0 font-label text-xs text-neutral-400 font-bold uppercase">
+                      {bid.buyer_name.charAt(0)}
+                    </div>
+                    <div className="max-w-[68%] space-y-1">
+                      <p className="font-label text-[8px] text-neutral-600 ml-1">
+                        {bid.buyer_name} · {new Date(bid.created_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}
+                      </p>
+                      <div className="bg-surface-container border border-outline-variant/15 rounded-2xl rounded-bl-sm px-4 py-3">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="font-headline italic text-2xl text-primary">{bid.bid_amount}</span>
+                          {listedPrice > 0 && (
+                            <span className={cn(
+                              'font-label text-[8px] px-1.5 py-0.5 rounded-sm',
+                              priceDiff >= 0 ? 'text-green-400 bg-green-950/30' :
+                              priceDiff >= -20 ? 'text-amber-400 bg-amber-950/30' :
+                              'text-red-400 bg-red-950/20'
+                            )}>
+                              {priceDiff >= 0 ? `+${priceDiff}%` : `${priceDiff}%`}
+                            </span>
+                          )}
+                        </div>
+                        {bid.message && (
+                          <p className="font-body text-sm text-on-surface-variant leading-relaxed mt-0.5">{bid.message}</p>
+                        )}
+                        <div className="mt-2 pt-2 border-t border-outline-variant/10 flex flex-wrap gap-x-3 gap-y-1">
+                          <span className="font-label text-[8px] text-neutral-600">{bid.buyer_email}</span>
+                          <span className="font-label text-[8px] text-neutral-600">{bid.buyer_phone}</span>
+                          {bid.buyer_whatsapp && (
+                            <span className="font-label text-[8px] text-green-500/70">WA: {bid.buyer_whatsapp}</span>
+                          )}
+                        </div>
+                      </div>
+                      {/* Status + delete */}
+                      <div className="flex items-center gap-2 ml-1">
+                        {!bid.read && bid.status === 'pending' && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                        )}
+                        <span className={cn(
+                          'font-label text-[7px] uppercase tracking-widest px-1.5 py-0.5',
+                          bid.status === 'pending' ? 'text-primary bg-primary/10' :
+                          bid.status === 'accepted' ? 'text-green-400 bg-green-950/30' :
+                          bid.status === 'countered' ? 'text-amber-400 bg-amber-950/30' :
+                          'text-neutral-600 bg-surface-container'
+                        )}>
+                          {bid.status}
+                        </span>
+                        {bid.status !== 'pending' && (
+                          <button onClick={() => handleDelete(bid.id)}
+                            className="text-neutral-800 hover:text-red-500 transition-colors" aria-label="Delete bid">
+                            <MaterialIcon name="delete" size="sm" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Artist reply bubble — RIGHT */}
+                  {(bid.status === 'accepted' || bid.status === 'countered' || bid.status === 'declined') && (
+                    <div className="flex gap-3 items-end flex-row-reverse">
+                      <div className="w-8 h-8 bg-primary/15 border border-primary/25 flex items-center justify-center shrink-0">
+                        <MaterialIcon name="brush" size="sm" className="text-primary/70" />
+                      </div>
+                      <div className={cn(
+                        'max-w-[68%] rounded-2xl rounded-br-sm px-4 py-3',
+                        bid.status === 'accepted' ? 'bg-green-950/30 border border-green-900/30' :
+                        bid.status === 'countered' ? 'bg-amber-950/25 border border-amber-900/30' :
+                        'bg-surface-container border border-outline-variant/15'
+                      )}>
+                        {bid.status === 'accepted' && (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              <MaterialIcon name="check_circle" size="sm" className="text-green-400" />
+                              <span className="font-label text-[9px] uppercase tracking-widest text-green-400">Offer Accepted</span>
+                            </div>
+                            <p className="font-body text-sm text-on-surface-variant leading-relaxed">
+                              Accepted at <strong className="text-green-300">{bid.bid_amount}</strong> — confirmation email sent to buyer.
+                            </p>
+                          </>
+                        )}
+                        {bid.status === 'countered' && bid.artist_counter_amount && (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              <MaterialIcon name="swap_horiz" size="sm" className="text-amber-400" />
+                              <span className="font-label text-[9px] uppercase tracking-widest text-amber-400">Counter-Offer Sent</span>
+                            </div>
+                            <p className="font-headline italic text-xl text-amber-300">{bid.artist_counter_amount}</p>
+                            {bid.artist_message && (
+                              <p className="font-body text-sm text-amber-200/70 mt-1 leading-relaxed">{bid.artist_message}</p>
+                            )}
+                            <p className="font-label text-[8px] text-neutral-600 mt-2">Counter email sent to buyer</p>
+                          </>
+                        )}
+                        {bid.status === 'declined' && (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              <MaterialIcon name="cancel" size="sm" className="text-neutral-500" />
+                              <span className="font-label text-[9px] uppercase tracking-widest text-neutral-500">Offer Declined</span>
+                            </div>
+                            <p className="font-body text-sm text-neutral-600 leading-relaxed">A polite decline email was sent to the buyer.</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* ── Compose bar ─────────────────────────────────────────────── */}
+          {activePendingBid && (
+            <div className="border-t border-outline-variant/10 bg-surface-container-lowest shrink-0">
+
+              {/* Counter expand area */}
+              {composeMode === 'counter' && (
+                <div className="px-5 py-4 border-b border-outline-variant/10 space-y-3 bg-surface-container-low">
+                  <p className="font-label text-[9px] uppercase tracking-widest text-neutral-500">
+                    Your Counter-Offer to {activePendingBid.buyer_name}
+                  </p>
+                  <div className="flex items-center gap-2 bg-surface-container border border-outline-variant/20 px-3 py-2">
+                    <span className="font-headline italic text-xl text-amber-400 shrink-0">₹</span>
+                    <input
+                      type="text"
+                      autoFocus
+                      placeholder="Counter amount"
+                      value={counterAmount}
+                      onChange={(e) => setCounterAmount(e.target.value)}
+                      className="flex-1 bg-transparent font-headline italic text-xl text-on-surface placeholder:text-neutral-700 focus:outline-none"
+                    />
+                  </div>
+                  <textarea
+                    placeholder="Add a message... (optional)"
+                    value={counterMsg}
+                    onChange={(e) => setCounterMsg(e.target.value)}
+                    rows={2}
+                    className="w-full bg-surface-container border border-outline-variant/20 resize-none font-body text-sm text-on-surface placeholder:text-neutral-700 px-3 py-2 focus:outline-none focus:border-amber-800/40 transition-colors"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { setComposeMode(null); setCounterAmount(''); setCounterMsg(''); }}
+                      className="flex-1 font-label text-[9px] uppercase tracking-widest text-neutral-600 border border-outline-variant/20 py-2 hover:bg-surface-container transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => handleCounter(activePendingBid)}
+                      disabled={!!actionLoading || !counterAmount.trim()}
+                      className="flex-[2] font-label text-[9px] uppercase tracking-widest text-amber-400 border border-amber-900/40 py-2 hover:bg-amber-950/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    >
+                      <MaterialIcon name="send" size="sm" />
+                      {actionLoading ? '…' : 'Send Counter & Email Buyer'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Quick-action bar */}
+              <div className="px-5 py-3 flex items-center gap-3">
+                <p className="font-label text-[8px] uppercase tracking-widest text-neutral-700 shrink-0 hidden sm:block">
+                  Reply:
+                </p>
+                <div className="flex gap-2 flex-1">
+                  <button
+                    onClick={() => handleAccept(activePendingBid)}
+                    disabled={!!actionLoading}
+                    className="flex-1 font-label text-[9px] uppercase tracking-widest text-green-400 border border-green-900/40 py-2.5 hover:bg-green-950/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  >
+                    <MaterialIcon name="check_circle" size="sm" />
+                    Accept
+                  </button>
+                  {composeMode !== 'counter' && (
+                    <button
+                      onClick={() => setComposeMode('counter')}
+                      disabled={!!actionLoading}
+                      className="flex-1 font-label text-[9px] uppercase tracking-widest text-amber-400 border border-amber-900/40 py-2.5 hover:bg-amber-950/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    >
+                      <MaterialIcon name="swap_horiz" size="sm" />
+                      Counter
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleDecline(activePendingBid)}
+                    disabled={!!actionLoading}
+                    className="flex-1 font-label text-[9px] uppercase tracking-widest text-red-500 border border-red-900/30 py-2.5 hover:bg-red-950/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  >
+                    <MaterialIcon name="cancel" size="sm" />
+                    Decline
+                  </button>
+                </div>
+              </div>
+              <p className="text-center font-label text-[7px] uppercase tracking-widest text-neutral-800 pb-2">
+                Each action emails the buyer automatically
+              </p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex-1 flex items-center justify-center">
+          <p className="font-label text-[10px] uppercase tracking-widest text-neutral-700">Select a conversation</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function AddDoodle({ onAdded }: { onAdded: () => void }) {
   const [form, setForm] = useState({
@@ -1149,18 +1520,56 @@ function Settings() {
       </div>
 
       <div className="bg-surface-container-low border border-outline-variant/5 p-6 space-y-4">
-        <h3 className="font-headline italic text-xl text-on-surface">Supabase — New Columns Required</h3>
+        <h3 className="font-headline italic text-xl text-on-surface">Supabase — Run These Migrations</h3>
         <p className="font-body text-sm text-on-surface-variant leading-relaxed mb-2">
-          Run this SQL in your Supabase SQL Editor to enable all new features:
+          Run this SQL in your Supabase SQL Editor to enable all features:
         </p>
         <pre className="bg-surface-container p-4 font-mono text-[10px] text-primary leading-relaxed overflow-x-auto whitespace-pre-wrap">
-{`ALTER TABLE orders
+{`-- Add missing orders columns (safe to run multiple times)
+ALTER TABLE orders
   ADD COLUMN IF NOT EXISTS order_id TEXT,
   ADD COLUMN IF NOT EXISTS upi_transaction_id TEXT,
   ADD COLUMN IF NOT EXISTS payment_verified BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS tracking_id TEXT,
   ADD COLUMN IF NOT EXISTS buyer_whatsapp TEXT,
-  ADD COLUMN IF NOT EXISTS buyer_pincode TEXT;`}
+  ADD COLUMN IF NOT EXISTS buyer_pincode TEXT;
+
+-- Create doodles table
+CREATE TABLE IF NOT EXISTS public.doodles (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title TEXT NOT NULL,
+  image_url TEXT,
+  price TEXT NOT NULL,
+  price_number NUMERIC DEFAULT 0,
+  status TEXT DEFAULT 'available' NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+ALTER TABLE public.doodles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "doodles_all" ON public.doodles FOR ALL USING (true) WITH CHECK (true);
+
+-- Create bids table
+CREATE TABLE IF NOT EXISTS public.bids (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  artwork_id UUID REFERENCES public.artworks(id) ON DELETE CASCADE,
+  artwork_title TEXT NOT NULL,
+  bid_amount TEXT NOT NULL,
+  bid_amount_number NUMERIC NOT NULL,
+  buyer_name TEXT NOT NULL,
+  buyer_email TEXT NOT NULL,
+  buyer_phone TEXT NOT NULL,
+  buyer_whatsapp TEXT,
+  message TEXT,
+  status TEXT DEFAULT 'pending' NOT NULL
+    CHECK (status IN ('pending','accepted','countered','declined')),
+  artist_counter_amount TEXT,
+  artist_message TEXT,
+  read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+ALTER TABLE public.bids ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "bids_all" ON public.bids FOR ALL USING (true) WITH CHECK (true);`}
         </pre>
         <p className="font-label text-[9px] text-neutral-600 uppercase tracking-widest">Run once in Supabase → SQL Editor → New Query</p>
       </div>
@@ -1185,19 +1594,22 @@ export function ArtistDashboard() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [doodles, setDoodles] = useState<Doodle[]>([]);
+  const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [artRes, ordRes, doodleRes] = await Promise.all([
+      const [artRes, ordRes, doodleRes, bidsRes] = await Promise.all([
         fetch('/api/artworks').then(r => r.json()),
         fetch('/api/orders').then(r => r.json()),
         fetch('/api/doodles').then(r => r.json()),
+        fetch('/api/bids').then(r => r.json()),
       ]);
       if (Array.isArray(artRes)) setArtworks(artRes);
       if (Array.isArray(ordRes)) setOrders(ordRes);
       if (Array.isArray(doodleRes)) setDoodles(doodleRes);
+      if (Array.isArray(bidsRes)) setBids(bidsRes);
     } catch { /* ignore */ }
     finally { setLoading(false); }
   }, []);
@@ -1211,6 +1623,7 @@ export function ArtistDashboard() {
 
   const sectionTitle = NAV_ITEMS.find(n => n.id === activeNav)?.label ?? '';
   const pendingVerification = orders.filter(o => o.status === 'pending_verification').length;
+  const unreadBids = bids.filter(b => !b.read && b.status === 'pending').length;
 
   return (
     <div className="min-h-screen bg-surface text-on-surface font-body flex overflow-x-hidden">
@@ -1246,6 +1659,12 @@ export function ArtistDashboard() {
                   {item.id === 'orders' && pendingVerification > 0 && (
                     <span className="ml-auto w-5 h-5 rounded-full bg-yellow-400 text-surface font-bold font-label text-[9px] flex items-center justify-center animate-pulse">
                       {pendingVerification}
+                    </span>
+                  )}
+                  {/* Bids badge */}
+                  {item.id === 'bids' && unreadBids > 0 && (
+                    <span className="ml-auto w-5 h-5 rounded-full bg-primary text-on-primary font-bold font-label text-[9px] flex items-center justify-center animate-pulse">
+                      {unreadBids}
                     </span>
                   )}
                 </button>
@@ -1298,12 +1717,13 @@ export function ArtistDashboard() {
             </div>
           ) : (
             <>
-              {activeNav === 'dashboard'       && <DashboardOverview artworks={artworks} orders={orders} doodles={doodles} />}
+              {activeNav === 'dashboard'       && <DashboardOverview artworks={artworks} orders={orders} doodles={doodles} bids={bids} />}
               {activeNav === 'add'             && <AddArtwork onAdded={fetchData} />}
               {activeNav === 'manage'          && <ManageArtworks artworks={artworks} onRefresh={fetchData} />}
               {activeNav === 'add-doodle'      && <AddDoodle onAdded={fetchData} />}
               {activeNav === 'manage-doodles'  && <ManageDoodles doodles={doodles} onRefresh={fetchData} />}
               {activeNav === 'orders'          && <OrdersPanel orders={orders} onRefresh={fetchData} artworks={artworks} />}
+              {activeNav === 'bids'            && <BidsPanel bids={bids} artworks={artworks} onRefresh={fetchData} />}
               {activeNav === 'settings'        && <Settings />}
             </>
           )}

@@ -7,6 +7,7 @@ import { MaterialIcon } from '@/components/ui/MaterialIcon';
 import { Artwork, reservationCountdown, isReservationExpired } from '@/data/artworks';
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { PurchaseModal } from './PurchaseModal';
+import { BidModal } from './BidModal';
 import { buildWhatsAppShareUrl } from '@/lib/share';
 
 interface ArtworkCardProps {
@@ -15,6 +16,7 @@ interface ArtworkCardProps {
 
 export function ArtworkCard({ artwork }: ArtworkCardProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [bidModalOpen, setBidModalOpen] = useState(false);
 
   const isSold = artwork.status === 'sold';
   const isReserved = artwork.status === 'reserved' && !isReservationExpired(artwork.reserved_until);
@@ -192,20 +194,31 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
           )}
 
           {isAvailable && (
-            <button
-              id={`artwork-card-purchase-${artwork.id}`}
-              onClick={handlePurchaseClick}
-              className={cn(
-                'w-full mt-2 gold-gradient-bg text-on-primary font-label text-[10px] font-bold py-4 uppercase tracking-widest',
-                'flex items-center justify-center gap-2',
-                'hover:scale-[1.01] active:scale-[0.98] transition-transform duration-300',
-                'shadow-[0_4px_20px_rgba(233,195,73,0.12)] hover:shadow-[0_8px_30px_rgba(233,195,73,0.22)]'
-              )}
-              aria-label={`Purchase ${artwork.title}`}
-            >
-              <MaterialIcon name="shopping_bag" size="sm" />
-              Purchase / Reserve
-            </button>
+            <div className="flex flex-col gap-2 mt-2">
+              <button
+                id={`artwork-card-purchase-${artwork.id}`}
+                onClick={handlePurchaseClick}
+                className={cn(
+                  'w-full gold-gradient-bg text-on-primary font-label text-[10px] font-bold py-4 uppercase tracking-widest',
+                  'flex items-center justify-center gap-2',
+                  'hover:scale-[1.01] active:scale-[0.98] transition-transform duration-300',
+                  'shadow-[0_4px_20px_rgba(233,195,73,0.12)] hover:shadow-[0_8px_30px_rgba(233,195,73,0.22)]'
+                )}
+                aria-label={`Purchase ${artwork.title}`}
+              >
+                <MaterialIcon name="shopping_bag" size="sm" />
+                Purchase / Reserve
+              </button>
+              <button
+                id={`artwork-card-bid-${artwork.id}`}
+                onClick={(e) => { e.preventDefault(); setBidModalOpen(true); }}
+                className="w-full border border-outline-variant/20 text-neutral-400 font-label text-[10px] font-bold py-3 uppercase tracking-widest flex items-center justify-center gap-2 hover:border-primary/30 hover:text-primary transition-all duration-300"
+                aria-label={`Make an offer for ${artwork.title}`}
+              >
+                <MaterialIcon name="gavel" size="sm" />
+                Make an Offer
+              </button>
+            </div>
           )}
 
           {isReserved && (
@@ -238,6 +251,15 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
           artwork={artwork}
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
+        />
+      )}
+
+      {/* Bid Modal */}
+      {isAvailable && (
+        <BidModal
+          artwork={artwork}
+          isOpen={bidModalOpen}
+          onClose={() => setBidModalOpen(false)}
         />
       )}
     </>
