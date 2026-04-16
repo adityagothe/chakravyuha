@@ -182,7 +182,7 @@ function TrustItem({ icon, label }: { icon: string; label: string }) {
 export default function UdharoPage() {
   const GREEN = '#22c55e';
   const DOWNLOAD_URL =
-    'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/application-4a860db4ce635157744e372ef88a745d07765c36e3b07821185fb20e0b0fd192.apk';
+    'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/udharo.apk';
 
   return (
     <main id="main-content" className="animate-page-in bg-[#0a0a0a] text-white overflow-x-hidden">
