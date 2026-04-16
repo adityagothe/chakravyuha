@@ -46,8 +46,8 @@ export const udharo: Project = {
     },
   ],
   downloads: {
-    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/v1.0.0/application-4a860db4ce635157744e372ef88a745d07765c36e3b07821185fb20e0b0fd192.apk',
-    githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/v1.0.0',
+    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/udharo.apk',
+    githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/Udharo-v1.0.0',
     sourceCodeUrl: 'https://github.com/adityagothe/chakravyuha',
     version: '1.0.0',
     versionCode: 1,
