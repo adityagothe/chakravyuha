@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: 'Local Growth — Get Your Business Found Online',
     description: 'Helping Indian small businesses become visible online. Google Maps, SEO, reviews, and directories — all handled for you.',
     type: 'website',
-    url: 'https://chakravyuha-aditya-gothe.vercel.app/local-growth',
+    url: 'https://vajravyuha.in/local-growth',
   },
   twitter: {
     card: 'summary_large_image',

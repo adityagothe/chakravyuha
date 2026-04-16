@@ -5,10 +5,28 @@ import { siteConfig } from '@/data/site';
 export function Footer() {
   return (
     <footer className="bg-[#1c1b1b] w-full py-16 px-12 flex flex-col items-center justify-center space-y-8 border-t border-primary/5">
-      <div className="font-headline text-xl font-bold text-primary mb-4 tracking-tighter">
-        {siteConfig.name}
+      <div className="flex flex-col items-center gap-1">
+        <div className="font-headline text-xl font-bold text-primary tracking-tighter">
+          {siteConfig.name}
+        </div>
+        <div className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600">
+          Founded by{' '}
+          <Link
+            href="/founder"
+            className="text-neutral-500 hover:text-primary transition-colors duration-300"
+          >
+            Aditya Gothe
+          </Link>
+          {' '}· Founder &amp; CEO
+        </div>
       </div>
       <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+        <Link
+          href="/founder"
+          className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 hover:text-neutral-200 transition-colors duration-300"
+        >
+          Founder
+        </Link>
         <Link
           href="/local-growth"
           className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 hover:text-neutral-200 transition-colors duration-300"
@@ -40,9 +58,10 @@ export function Footer() {
           Contact
         </Link>
       </div>
-      <div className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 pt-8 opacity-60">
+      <div className="font-label text-[10px] uppercase tracking-[0.2em] text-neutral-600 pt-4 opacity-60">
         {siteConfig.copyright}
       </div>
     </footer>
   );
 }
+

@@ -2,6 +2,15 @@ export const siteConfig = {
   name: 'VAJRAVYUHA',
   tagline: 'Layers of Imagination',
   description: 'Building systems, apps, and ideas — layer by layer. A digital manifestation of architectural precision and visionary engineering.',
+  founder: {
+    name: 'Aditya Gothe',
+    title: 'Founder & CEO',
+    company: 'Vajravyuha',
+    birthDate: 'January 29, 2007',
+    school: 'Sainik School Bijapur',
+    college: "BLDEA's College of Engineering & Technology, Bijapur",
+    philosophy: 'Dharma Rakshati Rakshitah',
+  },
   socials: {
     github: 'https://github.com/adityagothe',
     linkedin: 'https://www.linkedin.com/in/aditya-gothe-626352383/',
@@ -16,6 +25,7 @@ export const siteConfig = {
     projects: '/#projects',
     about: '/#about',
     contact: '/#contact',
+    founder: '/founder',
   },
   copyright: '© VAJRAVYUHA By Aditya Gothe. SOVEREIGN ARCHIVE.',
 };

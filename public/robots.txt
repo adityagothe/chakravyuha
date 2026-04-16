@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chakravyuha-aditya-gothe.vercel.app/sitemap.xml
+Sitemap: https://vajravyuha.in/sitemap.xml

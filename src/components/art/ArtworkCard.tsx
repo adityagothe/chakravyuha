@@ -125,6 +125,8 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
         </div>
 
         {/* ── Info panel ── */}
+        {/* Gold top-border: exclusive marker */}
+        <div className="h-0.5 w-full bg-gradient-to-r from-primary/60 via-primary/30 to-transparent" />
         <div
           className={cn(
             'p-6 border border-t-0 flex flex-col gap-4 transition-colors duration-300',
@@ -134,6 +136,11 @@ export function ArtworkCard({ artwork }: ArtworkCardProps) {
             isComingSoon && 'border-outline-variant/5 bg-surface-container-lowest'
           )}
         >
+          {/* ✦ EXCLUSIVE micro-badge */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-primary text-[10px] leading-none">✦</span>
+            <span className="font-label text-[8px] uppercase tracking-[0.35em] text-primary/70">Exclusive</span>
+          </div>
           {/* Title + price */}
           <div className="flex items-baseline justify-between gap-4">
             <h3

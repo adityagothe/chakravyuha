@@ -8,6 +8,7 @@ import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder';
 import { supabase } from '@/lib/supabase';
 import {
   Artwork,
+  Doodle,
   Order,
   OrderStatus,
   buildDailyReminderHref,
@@ -23,11 +24,13 @@ import {
 // ─── Nav tabs ─────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard',      icon: 'dashboard' },
-  { id: 'add',       label: 'Add Artwork',     icon: 'add_circle' },
-  { id: 'manage',    label: 'Manage Artworks', icon: 'grid_view' },
-  { id: 'orders',    label: 'Orders',          icon: 'receipt_long' },
-  { id: 'settings',  label: 'Settings',        icon: 'settings' },
+  { id: 'dashboard',       label: 'Dashboard',       icon: 'dashboard' },
+  { id: 'add',             label: 'Add Artwork',      icon: 'add_circle' },
+  { id: 'manage',          label: 'Manage Artworks',  icon: 'grid_view' },
+  { id: 'add-doodle',      label: 'Add Doodle',       icon: 'draw' },
+  { id: 'manage-doodles',  label: 'Manage Doodles',   icon: 'gesture' },
+  { id: 'orders',          label: 'Orders',           icon: 'receipt_long' },
+  { id: 'settings',        label: 'Settings',         icon: 'settings' },
 ] as const;
 
 type NavId = (typeof NAV_ITEMS)[number]['id'];
@@ -70,7 +73,7 @@ function OrderStatusBadge({ status }: { status: OrderStatus }) {
 
 // ─── Dashboard Overview ───────────────────────────────────────────────────────
 
-function DashboardOverview({ artworks, orders }: { artworks: Artwork[]; orders: Order[] }) {
+function DashboardOverview({ artworks, orders, doodles }: { artworks: Artwork[]; orders: Order[]; doodles: Doodle[] }) {
   const needsVerification = orders.filter(o => o.status === 'pending_verification').length;
 
   const stats = [
@@ -78,6 +81,12 @@ function DashboardOverview({ artworks, orders }: { artworks: Artwork[]; orders: 
     { label: 'Available',      value: artworks.filter(a => a.status === 'available').length,                    icon: 'sell',         sub: 'For sale',        color: 'text-primary' },
     { label: 'Reserved',       value: artworks.filter(a => a.status === 'reserved').length,                     icon: 'bookmark',     sub: '7-day holds',     color: 'text-amber-400', pulse: true },
     { label: 'Sold',           value: artworks.filter(a => a.status === 'sold').length,                         icon: 'check_circle', sub: 'Completed',       color: 'text-green-500' },
+  ];
+
+  const doodleStats = [
+    { label: 'Total Doodles',  value: doodles.length,                                                           icon: 'draw',         sub: 'In collection' },
+    { label: 'Available',      value: doodles.filter(d => d.status === 'available').length,                     icon: 'sell',         sub: 'For sale',        color: 'text-on-surface-variant' },
+    { label: 'Sold',           value: doodles.filter(d => d.status === 'sold').length,                          icon: 'check_circle', sub: 'Sold doodles',    color: 'text-green-500' },
   ];
 
   const activeReservations = orders.filter(
@@ -101,21 +110,49 @@ function DashboardOverview({ artworks, orders }: { artworks: Artwork[]; orders: 
         </div>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-5">
-        {stats.map((s) => (
-          <div key={s.label} className="bg-surface-container-low border border-outline-variant/5 p-6 group hover:bg-surface-container-high transition-colors">
-            <div className="flex justify-between items-start mb-8">
-              <span className="font-label text-[10px] uppercase tracking-widest text-neutral-500">{s.label}</span>
-              <MaterialIcon name={s.icon} size="md" className="text-primary/20 group-hover:text-primary/50 transition-colors" />
+      {/* Exclusive Collection Stats */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="font-label text-[9px] uppercase tracking-widest text-primary/70">✦ Exclusive Collection</span>
+          <div className="flex-1 h-px bg-primary/10" />
+        </div>
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-5">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-surface-container-low border border-outline-variant/5 p-6 group hover:bg-surface-container-high transition-colors">
+              <div className="flex justify-between items-start mb-8">
+                <span className="font-label text-[10px] uppercase tracking-widest text-neutral-500">{s.label}</span>
+                <MaterialIcon name={s.icon} size="md" className="text-primary/20 group-hover:text-primary/50 transition-colors" />
+              </div>
+              <p className="font-headline italic text-4xl text-on-surface">{s.value}</p>
+              <div className="mt-4 flex items-center gap-2">
+                {s.pulse && s.value > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
+                <span className={cn('font-label text-[9px] uppercase tracking-widest', s.color ?? 'text-neutral-600')}>{s.sub}</span>
+              </div>
             </div>
-            <p className="font-headline italic text-4xl text-on-surface">{s.value}</p>
-            <div className="mt-4 flex items-center gap-2">
-              {s.pulse && s.value > 0 && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />}
-              <span className={cn('font-label text-[9px] uppercase tracking-widest', s.color ?? 'text-neutral-600')}>{s.sub}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* Doodles Stats */}
+      <div>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/70">✏️ My Doodles</span>
+          <div className="flex-1 h-px bg-outline-variant/20" />
+        </div>
+        <div className="grid grid-cols-2 xl:grid-cols-3 gap-5">
+          {doodleStats.map((s) => (
+            <div key={s.label} className="bg-surface-container-low border border-outline-variant/5 p-6 group hover:bg-surface-container-high transition-colors">
+              <div className="flex justify-between items-start mb-8">
+                <span className="font-label text-[10px] uppercase tracking-widest text-neutral-500">{s.label}</span>
+                <MaterialIcon name={s.icon} size="md" className="text-on-surface-variant/20 group-hover:text-on-surface-variant/50 transition-colors" />
+              </div>
+              <p className="font-headline italic text-4xl text-on-surface">{s.value}</p>
+              <div className="mt-4">
+                <span className={cn('font-label text-[9px] uppercase tracking-widest', s.color ?? 'text-neutral-600')}>{s.sub}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Active reservation reminders */}
@@ -819,6 +856,256 @@ function OrdersPanel({ orders, onRefresh, artworks }: { orders: Order[]; onRefre
   );
 }
 
+// ─── Add Doodle ───────────────────────────────────────────────────────────────
+
+function AddDoodle({ onAdded }: { onAdded: () => void }) {
+  const [form, setForm] = useState({
+    title: '', price: '',
+    status: 'available' as Doodle['status'], image_url: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (field: string, value: string) =>
+    setForm((f) => ({ ...f, [field]: value }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title || !form.price) {
+      setError('Title and price are required.');
+      return;
+    }
+    setError(''); setLoading(true);
+    try {
+      const priceNumber = parseFloat(form.price.replace(/[^\d.]/g, '')) || 0;
+      const res = await fetch('/api/doodles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, price_number: priceNumber, image_url: form.image_url || null }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error ?? 'Failed to create doodle');
+      }
+      setSuccess(true);
+      setForm({ title: '', price: '', status: 'available', image_url: '' });
+      onAdded();
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass = 'w-full bg-surface-container border-b border-outline-variant/30 focus:border-primary/60 py-3 px-0 font-body text-sm text-on-surface placeholder:text-neutral-700 focus:outline-none transition-colors';
+  const labelClass = 'block font-label text-[9px] uppercase tracking-widest text-neutral-600 mb-2';
+
+  return (
+    <div className="max-w-2xl">
+      <p className="font-label text-[10px] uppercase tracking-widest text-neutral-600 mb-8">
+        Doodles are simple — just a title, price, and optional image.
+      </p>
+
+      {success && (
+        <div className="flex items-center gap-3 bg-primary/10 border border-primary/20 text-primary p-4 mb-6">
+          <MaterialIcon name="check_circle" size="sm" />
+          <span className="font-label text-[10px] uppercase tracking-widest">Doodle published successfully!</span>
+        </div>
+      )}
+      {error && (
+        <div className="flex items-center gap-3 bg-red-950/30 border border-red-900/30 text-red-400 p-4 mb-6">
+          <MaterialIcon name="error" size="sm" />
+          <span className="font-label text-[10px] uppercase tracking-widest">{error}</span>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} noValidate className="space-y-6">
+        <div>
+          <label className={labelClass}>Title *</label>
+          <input type="text" value={form.title} onChange={e => handleChange('title', e.target.value)}
+            placeholder="e.g. The Little Fox" className={inputClass} />
+        </div>
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className={labelClass}>Price * (with ₹)</label>
+            <input type="text" value={form.price} onChange={e => handleChange('price', e.target.value)}
+              placeholder="₹150" className={inputClass} />
+          </div>
+          <div>
+            <label className={labelClass}>Status</label>
+            <select value={form.status} onChange={e => handleChange('status', e.target.value)}
+              className={`${inputClass} cursor-pointer bg-surface-container`}>
+              <option value="available">Available (For Sale)</option>
+              <option value="sold">Sold</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label className={labelClass}>Doodle Image</label>
+          <input
+            type="file" accept="image/*" disabled={loading}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setLoading(true); setError('Uploading image...');
+              try {
+                const { v4: uuidv4 } = await import('uuid');
+                const fileExt = file.name.split('.').pop() || 'jpg';
+                const fileName = `doodle-${uuidv4()}.${fileExt}`;
+                const { error: uploadError } = await supabase.storage.from('art').upload(fileName, file);
+                if (uploadError) throw uploadError;
+                const { data } = supabase.storage.from('art').getPublicUrl(fileName);
+                handleChange('image_url', data.publicUrl);
+                setError('');
+              } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Error uploading image.');
+              } finally { setLoading(false); }
+            }}
+            className={inputClass}
+          />
+          <p className="mt-2 font-label text-[9px] text-neutral-700">Select an image to automatically upload it to Supabase Storage.</p>
+        </div>
+        {form.image_url && (
+          <div>
+            <label className={labelClass}>Image Preview</label>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={form.image_url} alt="Preview" className="w-32 h-32 object-cover border border-outline-variant/20" />
+          </div>
+        )}
+        <button type="submit" disabled={loading} id="add-doodle-submit"
+          className="gold-gradient-bg text-on-primary font-label text-[10px] font-bold uppercase tracking-widest px-10 py-4 hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-3">
+          {loading ? <span className="w-3 h-3 border border-on-primary/40 border-t-on-primary rounded-full animate-spin" /> : <MaterialIcon name="draw" size="sm" />}
+          Publish Doodle
+        </button>
+      </form>
+    </div>
+  );
+}
+
+// ─── Manage Doodles ───────────────────────────────────────────────────────────
+
+function ManageDoodles({ doodles, onRefresh }: { doodles: Doodle[]; onRefresh: () => void }) {
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState<Partial<Doodle>>({});
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this doodle permanently?')) return;
+    setDeleting(id);
+    try {
+      const res = await fetch(`/api/doodles/${id}`, { method: 'DELETE' });
+      if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Failed to delete'); }
+    } catch (err: unknown) { alert(`Error: ${err instanceof Error ? err.message : 'Unknown'}`); }
+    finally { setDeleting(null); onRefresh(); }
+  };
+
+  const handleSave = async (id: string) => {
+    setSaving(true);
+    let priceNumber = 0;
+    if (editDraft.price) priceNumber = parseFloat(editDraft.price.replace(/[^\d.]/g, '')) || 0;
+    await fetch(`/api/doodles/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...editDraft, ...(editDraft.price ? { price_number: priceNumber } : {}) }),
+    });
+    setSaving(false); setEditingId(null); onRefresh();
+  };
+
+  if (doodles.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
+        <span className="text-5xl" aria-hidden="true">✏️</span>
+        <p className="font-label text-[10px] uppercase tracking-widest text-neutral-600">No doodles yet. Add your first one.</p>
+      </div>
+    );
+  }
+
+  const inputClass = 'w-full bg-surface-container border border-outline-variant/30 text-on-surface font-label text-[10px] py-2 px-2 focus:outline-none focus:border-primary/50';
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      {doodles.map((doodle) => (
+        <div key={doodle.id} className="bg-surface-container-low border border-outline-variant/5 overflow-hidden group">
+          <div className="aspect-square relative overflow-hidden">
+            {doodle.image_url
+              ? <img src={doodle.image_url} alt={doodle.title} className="w-full h-full object-cover" />
+              : <ImagePlaceholder label={doodle.title} icon="draw" accentColor="#4a4a3a" className="w-full h-full rounded-none" />}
+            <div className="absolute top-3 right-3">
+              <span className={cn(
+                'inline-block font-label text-[8px] uppercase tracking-widest px-2 py-0.5',
+                doodle.status === 'available' ? 'text-on-surface-variant bg-surface-container' : 'text-neutral-600 bg-surface-container'
+              )}>
+                {doodle.status === 'available' ? 'For Sale' : 'Sold'}
+              </span>
+            </div>
+          </div>
+          <div className="p-5 space-y-3">
+            <div>
+              <p className="font-headline italic text-lg text-on-surface leading-tight">{doodle.title}</p>
+              <p className="font-label text-sm text-primary mt-1">{doodle.price}</p>
+            </div>
+
+            {editingId === doodle.id ? (
+              <div className="flex flex-col gap-3 border-t border-outline-variant/10 pt-3">
+                <input type="text" value={editDraft.title ?? ''} onChange={e => setEditDraft(d => ({ ...d, title: e.target.value }))} placeholder="Title" className={inputClass} />
+                <input type="text" value={editDraft.price ?? ''} onChange={e => setEditDraft(d => ({ ...d, price: e.target.value }))} placeholder="Price (₹)" className={inputClass} />
+                <select value={editDraft.status ?? 'available'} onChange={e => setEditDraft(d => ({ ...d, status: e.target.value as Doodle['status'] }))} className={`${inputClass} cursor-pointer bg-surface-container`}>
+                  <option value="available">Available</option>
+                  <option value="sold">Sold</option>
+                </select>
+                {/* Image re-upload */}
+                <div>
+                  <input type="file" accept="image/*" disabled={uploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setUploading(true);
+                      try {
+                        const { v4: uuidv4 } = await import('uuid');
+                        const fileExt = file.name.split('.').pop() || 'jpg';
+                        const fileName = `doodle-${uuidv4()}.${fileExt}`;
+                        const { error: uploadError } = await supabase.storage.from('art').upload(fileName, file);
+                        if (uploadError) throw uploadError;
+                        const { data } = supabase.storage.from('art').getPublicUrl(fileName);
+                        setEditDraft(d => ({ ...d, image_url: data.publicUrl }));
+                      } catch { /* ignore */ } finally { setUploading(false); }
+                    }}
+                    className={inputClass}
+                  />
+                  {uploading && <p className="font-label text-[9px] text-neutral-600 mt-1">Uploading…</p>}
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <button onClick={() => setEditingId(null)} className="flex-1 font-label text-[9px] uppercase tracking-widest text-neutral-600 border border-outline-variant/20 py-1.5 hover:bg-surface-container">Cancel</button>
+                  <button onClick={() => handleSave(doodle.id)} disabled={saving} className="flex-1 font-label text-[9px] uppercase tracking-widest text-primary border border-primary/30 py-1.5 hover:bg-primary/5 disabled:opacity-50">
+                    {saving ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setEditingId(doodle.id); setEditDraft({ title: doodle.title, price: doodle.price, status: doodle.status, image_url: doodle.image_url ?? '' }); }}
+                  className="flex-1 font-label text-[9px] uppercase tracking-widest text-neutral-500 border border-outline-variant/20 py-2 hover:border-outline-variant/40 hover:text-on-surface transition-all"
+                >
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(doodle.id)} disabled={deleting === doodle.id}
+                  className="font-label text-[9px] uppercase tracking-widest text-red-700 border border-red-900/20 px-3 py-2 hover:bg-red-950/30 transition-all disabled:opacity-50" aria-label={`Delete ${doodle.title}`}>
+                  {deleting === doodle.id ? '…' : <MaterialIcon name="delete" size="sm" />}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Settings ─────────────────────────────────────────────────────────────────
 
 function Settings() {
@@ -897,17 +1184,20 @@ export function ArtistDashboard() {
   const [activeNav, setActiveNav] = useState<NavId>('dashboard');
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [doodles, setDoodles] = useState<Doodle[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [artRes, ordRes] = await Promise.all([
+      const [artRes, ordRes, doodleRes] = await Promise.all([
         fetch('/api/artworks').then(r => r.json()),
         fetch('/api/orders').then(r => r.json()),
+        fetch('/api/doodles').then(r => r.json()),
       ]);
       if (Array.isArray(artRes)) setArtworks(artRes);
       if (Array.isArray(ordRes)) setOrders(ordRes);
+      if (Array.isArray(doodleRes)) setDoodles(doodleRes);
     } catch { /* ignore */ }
     finally { setLoading(false); }
   }, []);
@@ -1008,11 +1298,13 @@ export function ArtistDashboard() {
             </div>
           ) : (
             <>
-              {activeNav === 'dashboard' && <DashboardOverview artworks={artworks} orders={orders} />}
-              {activeNav === 'add'       && <AddArtwork onAdded={fetchData} />}
-              {activeNav === 'manage'    && <ManageArtworks artworks={artworks} onRefresh={fetchData} />}
-              {activeNav === 'orders'    && <OrdersPanel orders={orders} onRefresh={fetchData} artworks={artworks} />}
-              {activeNav === 'settings'  && <Settings />}
+              {activeNav === 'dashboard'       && <DashboardOverview artworks={artworks} orders={orders} doodles={doodles} />}
+              {activeNav === 'add'             && <AddArtwork onAdded={fetchData} />}
+              {activeNav === 'manage'          && <ManageArtworks artworks={artworks} onRefresh={fetchData} />}
+              {activeNav === 'add-doodle'      && <AddDoodle onAdded={fetchData} />}
+              {activeNav === 'manage-doodles'  && <ManageDoodles doodles={doodles} onRefresh={fetchData} />}
+              {activeNav === 'orders'          && <OrdersPanel orders={orders} onRefresh={fetchData} artworks={artworks} />}
+              {activeNav === 'settings'        && <Settings />}
             </>
           )}
         </main>

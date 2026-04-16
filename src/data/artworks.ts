@@ -26,6 +26,19 @@ export interface Artwork {
   updated_at: string;
 }
 
+// ─── Doodle type ──────────────────────────────────────────────────────────────
+
+export interface Doodle {
+  id: string;
+  title: string;
+  image_url: string | null;
+  price: string;
+  price_number: number;
+  status: 'available' | 'sold';
+  created_at: string;
+  updated_at: string;
+}
+
 export type OrderStatus =
   | 'pending_verification' // Buyer submitted UTR — awaiting artist verification
   | 'pending'              // Legacy / reservation fee pending

@@ -45,7 +45,7 @@ export function Navbar() {
     { name: 'Projects', href: '/#projects', id: 'projects' },
     { name: 'Business', href: '/local-growth', id: 'local-growth' },
     { name: 'Skills', href: '/#skills', id: 'skills' },
-    { name: 'About', href: '/#about', id: 'about' },
+    { name: 'Founder', href: '/founder', id: 'founder' },
     { name: 'Music', href: '/music', id: 'music' },
     { name: 'Art', href: '/art', id: 'art' },
     { name: 'Contact', href: '/#contact', id: 'contact' },
@@ -75,7 +75,7 @@ export function Navbar() {
             {navLinks.map((link) => {
               const isActive =
                 activeSection === link.id ||
-                ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth') && link.href === pathname);
+                ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth' || link.id === 'founder') && link.href === pathname);
               return (
                 <Link
                   key={link.name}
@@ -164,7 +164,7 @@ export function Navbar() {
           {navLinks.map((link, i) => {
             const isActive =
               activeSection === link.id ||
-              ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth') && link.href === pathname);
+              ((link.id === 'music' || link.id === 'art' || link.id === 'local-growth' || link.id === 'founder') && link.href === pathname);
             return (
               <Link
                 key={link.name}
@@ -188,7 +188,7 @@ export function Navbar() {
                     ? 'deployed_code'
                     : link.id === 'skills'
                     ? 'build'
-                    : link.id === 'about'
+                    : link.id === 'founder'
                     ? 'person'
                     : link.id === 'music'
                     ? 'music_note'

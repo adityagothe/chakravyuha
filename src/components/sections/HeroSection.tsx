@@ -23,7 +23,7 @@ export function HeroSection() {
           <h1 className="font-headline text-[clamp(3.5rem,14vw,9rem)] font-extrabold tracking-tighter text-on-surface mb-6 md:mb-8 leading-none">
             VAJRA<span className="gold-gradient-text">VYUHA</span>
             <span className="block text-xl md:text-2xl font-body font-normal text-on-surface-variant/70 mt-2 tracking-widest uppercase">
-              by Aditya Gothe
+              Founder &amp; CEO — Aditya Gothe
             </span>
           </h1>
         </FadeIn>

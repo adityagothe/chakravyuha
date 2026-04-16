@@ -28,17 +28,25 @@ export function ArtworkGrid() {
   return (
     <section
       id="artworks"
-      className="px-6 md:px-12 py-16 md:py-24 bg-surface-container-low"
-      aria-label="Current collection"
+      className="relative px-6 md:px-12 py-16 md:py-24 bg-surface-container-low"
+      aria-label="Exclusive collection"
     >
+      {/* Gold accent strip at very top of section */}
+      <div className="absolute top-0 left-0 right-0 h-0.5 gold-gradient-bg opacity-70" />
+      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
+
       {/* Section header */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
         <div>
-          <span className="font-label text-primary uppercase tracking-[0.3em] text-[10px] mb-3 block">
-            The Collection
-          </span>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-primary text-sm leading-none select-none">✦</span>
+            <span className="font-label text-primary uppercase tracking-[0.3em] text-[10px]">
+              The Exclusive Collection
+            </span>
+            <span className="text-primary text-sm leading-none select-none">✦</span>
+          </div>
           <h2 className="font-headline italic text-4xl md:text-5xl text-on-surface">
-            Original <span className="text-primary">Works</span>
+            Exclusive <span className="text-primary">Originals</span>
           </h2>
         </div>
 
@@ -67,12 +75,21 @@ export function ArtworkGrid() {
         )}
       </div>
 
+      {/* Decorative gold divider */}
+      <div className="flex items-center gap-4 mb-14">
+        <div className="flex-1 h-px bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
+        <span className="font-label text-[9px] uppercase tracking-[0.4em] text-primary/50 shrink-0">
+          1 of 1 · Sovereign
+        </span>
+        <div className="flex-1 h-px bg-gradient-to-l from-primary/40 via-primary/20 to-transparent" />
+      </div>
+
       {/* Loading */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           <p className="font-label text-[10px] uppercase tracking-widest text-neutral-600">
-            Loading collection…
+            Loading exclusive collection…
           </p>
         </div>
       )}
@@ -96,7 +113,7 @@ export function ArtworkGrid() {
               No Artworks Yet
             </h3>
             <p className="font-body text-sm text-on-surface-variant max-w-xs mx-auto leading-relaxed">
-              New works are being added to the collection. Check back soon — or follow the artist on social media for updates.
+              New exclusive works are being added to the collection. Check back soon — or follow the artist on social media for updates.
             </p>
           </div>
           <a
