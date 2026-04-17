@@ -46,7 +46,7 @@ export const udharo: Project = {
     },
   ],
   downloads: {
-    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/application-4a860db4ce635157744e372ef88a745d07765c36e3b07821185fb20e0b0fd192.apk',
+    apkUrl: 'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/application-1d4c65e7-c242-4029-999d-237f35d656a7.apk',
     githubReleaseUrl: 'https://github.com/adityagothe/chakravyuha/releases/tag/Udharo-v1.0.0',
     sourceCodeUrl: 'https://github.com/adityagothe/chakravyuha',
     version: '1.0.0',
@@ -55,7 +55,7 @@ export const udharo: Project = {
     releaseNotes: '• Initial release — The First Ledger\n• Instant transaction recording\n• Clean ledger view\n• Settle up with one tap',
     fileSize: undefined,
     minAndroidVersion: 'Android 8.0+',
-    sha256Checksum: '4a860db4ce635157744e372ef88a745d07765c36e3b07821185fb20e0b0fd192',
+    sha256Checksum: '75158acb0d68f0b1b2c4664f8883d33ec2661352de595e8ddd0d8d200eef03b0',
   },
   techStack: ['React Native', 'Expo', 'SQLite'],
   createdAt: '2026-04-16T00:00:00Z',
