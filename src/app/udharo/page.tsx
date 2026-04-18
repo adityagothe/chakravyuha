@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import NextImage from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Udharo — Track Udhar. No Confusion.',
@@ -414,8 +415,90 @@ export default function UdharoPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          3. PROBLEM SECTION
+          3. SCREENSHOTS — Play Store-style carousel
       ════════════════════════════════════════════════════════ */}
+      <section className="py-24 px-6 bg-[#0d0d0d]">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <p className="font-label text-[11px] uppercase tracking-[0.4em] mb-3" style={{ color: GREEN }}>
+                Screenshots
+              </p>
+              <h2 className="font-headline text-4xl md:text-5xl font-bold text-white">
+                See it in action.
+              </h2>
+            </div>
+            <p className="hidden sm:flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/30 font-label">
+              <span className="material-symbols-outlined text-sm">swipe</span>
+              Scroll to explore
+            </p>
+          </div>
+
+          {/* Carousel with fade edges */}
+          <div className="relative">
+            {/* Left fade */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-r from-[#0d0d0d] to-transparent" />
+            {/* Right fade */}
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-10 z-10 bg-gradient-to-l from-[#0d0d0d] to-transparent" />
+
+            <div
+              className="flex gap-4 overflow-x-auto pb-4 px-1"
+              style={{
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(34,197,94,0.25) transparent',
+              }}
+            >
+              {[
+                { src: '/images/u (1).jpeg', caption: 'Home' },
+                { src: '/images/u (2).jpeg', caption: 'Add Udhar' },
+                { src: '/images/u (3).jpeg', caption: 'Balances' },
+                { src: '/images/u (4).jpeg', caption: 'Contact' },
+                { src: '/images/u (5).jpeg', caption: 'Transactions' },
+                { src: '/images/u (6).jpeg', caption: 'Settings' },
+                { src: '/images/u (7).jpeg', caption: 'History' },
+                { src: '/images/u (8).jpeg', caption: 'Settle Up' },
+                { src: '/images/u (9).jpeg', caption: 'Summary' },
+                { src: '/images/u (10).jpeg', caption: 'Profile' },
+              ].map((shot, idx) => (
+                <div
+                  key={idx}
+                  className="relative flex-none rounded-2xl overflow-hidden border border-white/10 shadow-2xl group hover:border-white/20 transition-colors"
+                  style={{
+                    scrollSnapAlign: 'start',
+                    width: 'clamp(160px, 20vw, 240px)',
+                    aspectRatio: '9 / 19',
+                  }}
+                >
+                  <NextImage
+                    src={shot.src}
+                    alt={`Udharo app — ${shot.caption}`}
+                    fill
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+                    sizes="(max-width: 768px) 40vw, 20vw"
+                  />
+                  {/* Caption reveal on hover */}
+                  <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="font-label text-[10px] uppercase tracking-widest text-white/90">{shot.caption}</p>
+                  </div>
+                  {/* Green glow on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
+                    style={{ boxShadow: `0 0 0 1px rgba(34,197,94,0.4)` }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          4. PROBLEM SECTION
+      ════════════════════════════════════════════════════════ */}
+
       <section className="py-32 px-6 bg-[#0d0d0d]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">

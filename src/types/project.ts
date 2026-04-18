@@ -19,6 +19,7 @@ export interface Project {
   // === Visual ===
   coverImage: ImageAsset | null; // null = show placeholder
   screenshots: Screenshot[];
+  screenshotOrientation?: 'landscape' | 'portrait'; // default: landscape (16:9)
   icon: ImageAsset | null;
   colorAccent: string; // Per-project accent hex
 

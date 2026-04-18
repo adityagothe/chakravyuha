@@ -167,7 +167,6 @@ export default async function ProjectDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Screenshot Gallery — horizontal scroll carousel */}
       {project.screenshots && project.screenshots.length > 0 && (
         <section className="mb-24">
           <div className="flex items-end justify-between mb-8">
@@ -197,40 +196,45 @@ export default async function ProjectDetailPage({ params }: Props) {
                 scrollbarColor: 'rgba(233,195,73,0.25) transparent',
               }}
             >
-              {project.screenshots.map((shot, idx) => (
-                <div
-                  key={idx}
-                  className="relative flex-none rounded-xl overflow-hidden glass-panel border border-outline-variant/20 shadow-2xl group"
-                  style={{
-                    scrollSnapAlign: 'start',
-                    width: 'clamp(280px, 55vw, 720px)',
-                    aspectRatio: '16 / 9',
-                  }}
-                >
-                  {shot.image ? (
-                    <NextImage
-                      src={shot.image.src}
-                      alt={shot.image.alt || shot.caption || 'Screenshot'}
-                      fill
-                      className="object-contain group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                      sizes="(max-width: 768px) 90vw, 55vw"
-                    />
-                  ) : (
-                    <ImagePlaceholder
-                      label={shot.caption || 'Screenshot'}
-                      icon="image"
-                      accentColor={project.colorAccent}
-                      className="rounded-none w-full h-full"
-                    />
-                  )}
-                  {/* Caption */}
-                  {shot.caption && (
-                    <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/75 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <p className="font-label text-[10px] text-on-surface uppercase tracking-widest">{shot.caption}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
+              {project.screenshots.map((shot, idx) => {
+                const isPortrait = project.screenshotOrientation === 'portrait';
+                return (
+                  <div
+                    key={idx}
+                    className="relative flex-none rounded-xl overflow-hidden glass-panel border border-outline-variant/20 shadow-2xl group"
+                    style={{
+                      scrollSnapAlign: 'start',
+                      width: isPortrait
+                        ? 'clamp(160px, 18vw, 220px)'
+                        : 'clamp(280px, 55vw, 720px)',
+                      aspectRatio: isPortrait ? '9 / 19' : '16 / 9',
+                    }}
+                  >
+                    {shot.image ? (
+                      <NextImage
+                        src={shot.image.src}
+                        alt={shot.image.alt || shot.caption || 'Screenshot'}
+                        fill
+                        className="object-cover group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                        sizes={isPortrait ? '(max-width: 768px) 40vw, 18vw' : '(max-width: 768px) 90vw, 55vw'}
+                      />
+                    ) : (
+                      <ImagePlaceholder
+                        label={shot.caption || 'Screenshot'}
+                        icon="image"
+                        accentColor={project.colorAccent}
+                        className="rounded-none w-full h-full"
+                      />
+                    )}
+                    {/* Caption */}
+                    {shot.caption && (
+                      <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/75 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="font-label text-[10px] text-on-surface uppercase tracking-widest">{shot.caption}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

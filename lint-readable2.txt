@@ -1,0 +1,323 @@
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\app\artist\layout.tsx ---
+Line 21:7 - [ERROR] Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\app\artist\layout.tsx:21:7
+  19 |     const flag = sessionStorage.getItem('vajravyuha_artist_auth');
+  20 |     if (flag === 'true') {
+> 21 |       setAuthorized(true);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  22 |     } else {
+  23 |       // Not authorized → redirect immediately
+  24 |       router.replace('/art'); (react-hooks/set-state-in-effect)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\app\layout.tsx ---
+Line 104:9 - [WARN] Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font (@next/next/no-page-custom-font)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\app\udharo\page.tsx ---
+Line 723:13 - [ERROR] Do not use an `<a>` element to navigate to `/projects/udharo/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages (@next/next/no-html-link-for-pages)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx ---
+Line 376:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:376:18
+  374 |               </div>
+  375 |               <div className="px-5">
+> 376 |                 <MetaRow label="Medium" value={artwork.medium} />
+      |                  ^^^^^^^ This component is created during render
+  377 |                 <MetaRow label="Dimensions" value={artwork.dimensions} />
+  378 |                 <MetaRow label="Price" value={artwork.price} />
+  379 |                 <MetaRow label="Status" value={
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 377:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:377:18
+  375 |               <div className="px-5">
+  376 |                 <MetaRow label="Medium" value={artwork.medium} />
+> 377 |                 <MetaRow label="Dimensions" value={artwork.dimensions} />
+      |                  ^^^^^^^ This component is created during render
+  378 |                 <MetaRow label="Price" value={artwork.price} />
+  379 |                 <MetaRow label="Status" value={
+  380 |                   isSold ? 'Sold' :
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 378:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:378:18
+  376 |                 <MetaRow label="Medium" value={artwork.medium} />
+  377 |                 <MetaRow label="Dimensions" value={artwork.dimensions} />
+> 378 |                 <MetaRow label="Price" value={artwork.price} />
+      |                  ^^^^^^^ This component is created during render
+  379 |                 <MetaRow label="Status" value={
+  380 |                   isSold ? 'Sold' :
+  381 |                   isReserved ? 'Reserved (7-Day Hold)' :
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 379:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:379:18
+  377 |                 <MetaRow label="Dimensions" value={artwork.dimensions} />
+  378 |                 <MetaRow label="Price" value={artwork.price} />
+> 379 |                 <MetaRow label="Status" value={
+      |                  ^^^^^^^ This component is created during render
+  380 |                   isSold ? 'Sold' :
+  381 |                   isReserved ? 'Reserved (7-Day Hold)' :
+  382 |                   isComingSoon ? 'Coming Soon' :
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 385:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:385:18
+  383 |                   'Available for Purchase'
+  384 |                 } />
+> 385 |                 <MetaRow label="Provenance" value="Signed Certificate of Authenticity included" />
+      |                  ^^^^^^^ This component is created during render
+  386 |                 <MetaRow label="Shipping" value="Via India Post · Carefully packed" />
+  387 |                 <MetaRow label="Source" value="VAJRAVYUHA · Original · 1 of 1" />
+  388 |               </div>
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 386:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:386:18
+  384 |                 } />
+  385 |                 <MetaRow label="Provenance" value="Signed Certificate of Authenticity included" />
+> 386 |                 <MetaRow label="Shipping" value="Via India Post · Carefully packed" />
+      |                  ^^^^^^^ This component is created during render
+  387 |                 <MetaRow label="Source" value="VAJRAVYUHA · Original · 1 of 1" />
+  388 |               </div>
+  389 |             </div>
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+Line 387:18 - [ERROR] Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:387:18
+  385 |                 <MetaRow label="Provenance" value="Signed Certificate of Authenticity included" />
+  386 |                 <MetaRow label="Shipping" value="Via India Post · Carefully packed" />
+> 387 |                 <MetaRow label="Source" value="VAJRAVYUHA · Original · 1 of 1" />
+      |                  ^^^^^^^ This component is created during render
+  388 |               </div>
+  389 |             </div>
+  390 |
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\ArtworkDetailView.tsx:69:19
+  67 |
+  68 |   // ── Reusable label/value row ────────────────────────────────────────────────
+> 69 |   const MetaRow = ({ label, value }: { label: string; value: string }) => (
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |       <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |         {label}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |       </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 74 |       <span className="font-body text-sm text-on-surface-variant">{value}</span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     </div>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   );
+     | ^^^^ The component is created during render here
+  77 |
+  78 |   return (
+  79 |     <> (react-hooks/static-components)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\DoodleCard.tsx ---
+Line 43:5 - [ERROR] Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\DoodleCard.tsx:43:5
+  41 |
+  42 |   const isNew =
+> 43 |     Date.now() - new Date(doodle.created_at).getTime() <
+     |     ^^^^^^^^^^ Cannot call impure function
+  44 |     7 * 24 * 60 * 60 * 1000;
+  45 |
+  46 |   const handleBuyClick = useCallback((e: React.MouseEvent) => { (react-hooks/purity)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\DoodlesSection.tsx ---
+Line 25:21 - [ERROR] Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\DoodlesSection.tsx:25:21
+  23 |   }, []);
+  24 |
+> 25 |   useEffect(() => { fetchDoodles(); }, [fetchDoodles]);
+     |                     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  26 |
+  27 |   // "Surprise Me!" — scroll to a random available doodle card
+  28 |   const handleSurpriseMe = () => { (react-hooks/set-state-in-effect)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\art\PurchaseModal.tsx ---
+Line 147:9 - [WARN] 'payNumber' is assigned a value but never used. (@typescript-eslint/no-unused-vars)
+Line 600:65 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 600:77 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+
+--- C:\Users\Two Stars HQ\Desktop\aditya_gothe\src\components\artist\ArtistDashboard.tsx ---
+Line 83:9 - [WARN] 'pendingBids' is assigned a value but never used. (@typescript-eslint/no-unused-vars)
+Line 92:9 - [WARN] 'doodleStats' is assigned a value but never used. (@typescript-eslint/no-unused-vars)
+Line 432:17 - [WARN] Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element (@next/next/no-img-element)
+Line 713:69 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 713:85 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 875:6 - [WARN] React Hook React.useEffect has a missing dependency: 'conversationList'. Either include it or remove the dependency array. (react-hooks/exhaustive-deps)
+Line 1406:17 - [WARN] Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element (@next/next/no-img-element)
+Line 1514:88 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 1514:103 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 1516:58 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 1516:79 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 1517:56 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
+Line 1517:63 - [ERROR] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`. (react/no-unescaped-entities)
