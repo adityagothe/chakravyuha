@@ -11,7 +11,7 @@ export const udharo: Project = {
   category: 'app',
   platforms: ['android'],
   categoryLabel: 'Money Tracker',
-  coverImage: '/images/Udharo-cover.png',
+  coverImage: { src: '/images/Udharo-cover.png', alt: 'Udharo app cover', width: 1200, height: 630 },
   screenshots: [],
   icon: null,
   colorAccent: '#22c55e',
