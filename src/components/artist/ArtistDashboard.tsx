@@ -78,9 +78,8 @@ function OrderStatusBadge({ status }: { status: OrderStatus }) {
 
 // ─── Dashboard Overview ───────────────────────────────────────────────────────
 
-function DashboardOverview({ artworks, orders, doodles, bids }: { artworks: Artwork[]; orders: Order[]; doodles: Doodle[]; bids: Bid[] }) {
+function DashboardOverview({ artworks, orders }: { artworks: Artwork[]; orders: Order[] }) {
   const needsVerification = orders.filter(o => o.status === 'pending_verification').length;
-  const pendingBids = bids.filter(b => b.status === 'pending').length;
 
   const stats = [
     { label: 'Total Artworks', value: artworks.length,                                                          icon: 'palette',      sub: 'In collection' },
@@ -89,11 +88,6 @@ function DashboardOverview({ artworks, orders, doodles, bids }: { artworks: Artw
     { label: 'Sold',           value: artworks.filter(a => a.status === 'sold').length,                         icon: 'check_circle', sub: 'Completed',       color: 'text-green-500' },
   ];
 
-  const doodleStats = [
-    { label: 'Total Doodles',  value: doodles.length,                                                           icon: 'draw',         sub: 'In collection' },
-    { label: 'Available',      value: doodles.filter(d => d.status === 'available').length,                     icon: 'sell',         sub: 'For sale',        color: 'text-on-surface-variant' },
-    { label: 'Sold',           value: doodles.filter(d => d.status === 'sold').length,                          icon: 'check_circle', sub: 'Sold doodles',    color: 'text-green-500' },
-  ];
 
   const activeReservations = orders.filter(
     o => o.order_type === 'reservation' && o.status === 'pending' && !isReservationExpired(o.reserved_until)
@@ -429,6 +423,7 @@ function ManageArtworks({ artworks, onRefresh }: { artworks: Artwork[]; onRefres
         <div key={artwork.id} className="bg-surface-container-low border border-outline-variant/5 overflow-hidden group">
           <div className="aspect-video relative overflow-hidden">
             {artwork.image_url
+              // eslint-disable-next-line @next/next/no-img-element
               ? <img src={artwork.image_url} alt={artwork.title} className="w-full h-full object-cover" />
               : <ImagePlaceholder label={artwork.title} icon="palette" accentColor="#353535" className="w-full h-full rounded-none" />}
             <div className="absolute top-3 right-3"><ArtworkBadge status={artwork.status} /></div>
@@ -710,7 +705,7 @@ function OrdersPanel({ orders, onRefresh, artworks }: { orders: Order[]; onRefre
                       </button>
                     </div>
                     <p className="font-body text-xs text-neutral-600 leading-relaxed">
-                      Clicking <strong className="text-neutral-400">"Confirm Payment"</strong> will mark the order as confirmed and open your email app to send a confirmation to <strong className="text-primary">{order.buyer_email}</strong> with all order details.
+                      Clicking <strong className="text-neutral-400">&quot;Confirm Payment&quot;</strong> will mark the order as confirmed and open your email app to send a confirmation to <strong className="text-primary">{order.buyer_email}</strong> with all order details.
                     </p>
                   </div>
                 )}
@@ -872,6 +867,7 @@ function BidsPanel({ bids, artworks, onRefresh }: { bids: Bid[]; artworks: Artwo
     if (!selectedId && conversationList.length > 0) {
       setSelectedId(conversationList[0].artworkId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationList.length, selectedId]);
 
   React.useEffect(() => {
@@ -1403,6 +1399,7 @@ function ManageDoodles({ doodles, onRefresh }: { doodles: Doodle[]; onRefresh: (
         <div key={doodle.id} className="bg-surface-container-low border border-outline-variant/5 overflow-hidden group">
           <div className="aspect-square relative overflow-hidden">
             {doodle.image_url
+              // eslint-disable-next-line @next/next/no-img-element
               ? <img src={doodle.image_url} alt={doodle.title} className="w-full h-full object-cover" />
               : <ImagePlaceholder label={doodle.title} icon="draw" accentColor="#4a4a3a" className="w-full h-full rounded-none" />}
             <div className="absolute top-3 right-3">
@@ -1511,10 +1508,10 @@ function Settings() {
           <p>Buyers pay via Paytm/UPI, then enter their <strong className="text-on-surface">UPI Transaction Reference (UTR)</strong> — a unique number from their payment receipt.</p>
           <ol className="list-decimal list-inside space-y-1 text-sm">
             <li>Buyer places order with their UTR number</li>
-            <li>You receive an alert in dashboard: <strong className="text-yellow-400">"Verify Payment"</strong></li>
+            <li>You receive an alert in dashboard: <strong className="text-yellow-400">&quot;Verify Payment&quot;</strong></li>
             <li>Open your Paytm or bank app → check if the UTR matches</li>
-            <li>Click <strong className="text-green-400">"Verify &amp; Confirm"</strong> if money received</li>
-            <li>Click <strong className="text-red-400">"Reject"</strong> if UTR not found</li>
+            <li>Click <strong className="text-green-400">&quot;Verify &amp; Confirm&quot;</strong> if money received</li>
+            <li>Click <strong className="text-red-400">&quot;Reject&quot;</strong> if UTR not found</li>
           </ol>
         </div>
       </div>

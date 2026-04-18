@@ -18,6 +18,7 @@ export default function ArtistLayout({
   useEffect(() => {
     const flag = sessionStorage.getItem('vajravyuha_artist_auth');
     if (flag === 'true') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAuthorized(true);
     } else {
       // Not authorized → redirect immediately

@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://vajravyuha.in/udharo',
+    images: [
+      {
+        url: '/images/Udharo-cover.png',
+        width: 1200,
+        height: 630,
+        alt: 'Udharo — Track Udhar. No Confusion.',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -182,7 +190,7 @@ function TrustItem({ icon, label }: { icon: string; label: string }) {
 export default function UdharoPage() {
   const GREEN = '#22c55e';
   const DOWNLOAD_URL =
-    'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.0.0/application-1d4c65e7-c242-4029-999d-237f35d656a7.apk';
+    'https://github.com/adityagothe/chakravyuha/releases/download/Udharo-v1.1.0/application-2b43f2ce-4aab-4061-b6c5-96a58ac73b07.apk';
 
   return (
     <main id="main-content" className="animate-page-in bg-[#0a0a0a] text-white overflow-x-hidden">
@@ -712,12 +720,12 @@ export default function UdharoPage() {
               <span className="material-symbols-outlined">download</span>
               Download APK
             </a>
-            <a
+            <Link
               href="/projects/udharo"
               className="inline-flex items-center gap-2 px-8 py-5 rounded-full font-label font-bold text-sm uppercase tracking-widest border border-white/10 text-white/50 hover:border-white/20 hover:text-white transition-all"
             >
               View Project Details
-            </a>
+            </Link>
           </div>
 
           <p className="mt-6 text-xs text-white/20 flex items-center justify-center gap-2">

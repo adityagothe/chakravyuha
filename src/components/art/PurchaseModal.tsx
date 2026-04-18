@@ -144,7 +144,6 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
   };
 
   const payAmount = purchaseType === 'reservation' ? reservationFee.display : artwork.price;
-  const payNumber = purchaseType === 'reservation' ? reservationFee.number : artwork.price_number;
 
   // ── Validate UTR ─────────────────────────────────────────────────────────────
   const handleUtrSubmit = () => {
@@ -597,7 +596,7 @@ export function PurchaseModal({ artwork, isOpen, onClose }: PurchaseModalProps) 
                 </div>
 
                 <p className="font-label text-[9px] text-neutral-700 leading-relaxed pt-1">
-                  Clicking <strong className="text-neutral-500">"Place Order"</strong> will submit your order for artist verification and open a confirmation email to{' '}
+                  Clicking <strong className="text-neutral-500">&quot;Place Order&quot;</strong> will submit your order for artist verification and open a confirmation email to{' '}
                   <span className="text-primary">vajra.vyuha.official@gmail.com</span>.
                   Your order is confirmed only after the artist verifies your payment reference.
                 </p>

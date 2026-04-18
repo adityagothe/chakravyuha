@@ -22,6 +22,7 @@ export function DoodlesSection() {
       .finally(() => setLoading(false));
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchDoodles(); }, [fetchDoodles]);
 
   // "Surprise Me!" — scroll to a random available doodle card

@@ -39,9 +39,9 @@ export function DoodleCard({ doodle }: DoodleCardProps) {
   const isSold = doodle.status === 'sold';
   const isAvailable = doodle.status === 'available';
 
-  const isNew =
-    Date.now() - new Date(doodle.created_at).getTime() <
-    7 * 24 * 60 * 60 * 1000;
+  const [isNew] = useState(
+    () => Date.now() - new Date(doodle.created_at).getTime() < 7 * 24 * 60 * 60 * 1000
+  );
 
   const handleBuyClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();

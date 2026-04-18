@@ -18,6 +18,16 @@ import {
   artworkUrl,
 } from '@/lib/share';
 
+// ── Reusable label/value row ────────────────────────────────────────────────
+const MetaRow = ({ label, value }: { label: string; value: string }) => (
+  <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
+    <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
+      {label}
+    </span>
+    <span className="font-body text-sm text-on-surface-variant">{value}</span>
+  </div>
+);
+
 interface ArtworkDetailViewProps {
   artwork: Artwork;
 }
@@ -65,15 +75,6 @@ export function ArtworkDetailView({ artwork }: ArtworkDetailViewProps) {
     }
   }, [artwork]);
 
-  // ── Reusable label/value row ────────────────────────────────────────────────
-  const MetaRow = ({ label, value }: { label: string; value: string }) => (
-    <div className="flex items-start gap-6 py-3 border-b border-outline-variant/10 last:border-b-0">
-      <span className="font-label text-[9px] uppercase tracking-widest text-neutral-600 w-24 shrink-0 pt-0.5">
-        {label}
-      </span>
-      <span className="font-body text-sm text-on-surface-variant">{value}</span>
-    </div>
-  );
 
   return (
     <>
