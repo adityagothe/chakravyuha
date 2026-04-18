@@ -1714,7 +1714,7 @@ export function ArtistDashboard() {
             </div>
           ) : (
             <>
-              {activeNav === 'dashboard'       && <DashboardOverview artworks={artworks} orders={orders} doodles={doodles} bids={bids} />}
+              {activeNav === 'dashboard'       && <DashboardOverview artworks={artworks} orders={orders} />}
               {activeNav === 'add'             && <AddArtwork onAdded={fetchData} />}
               {activeNav === 'manage'          && <ManageArtworks artworks={artworks} onRefresh={fetchData} />}
               {activeNav === 'add-doodle'      && <AddDoodle onAdded={fetchData} />}
