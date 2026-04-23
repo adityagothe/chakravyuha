@@ -293,7 +293,8 @@ export default function FounderPage() {
                 '@type': 'Person',
                 '@id': 'https://vajravyuha.in/#person',
                 'name': 'Aditya Gothe',
-                'jobTitle': 'Founder & CEO',
+                'alternateName': ['Aditya', 'Gothe', 'Gote', 'Ghost5400', '5400'],
+                'jobTitle': 'CEO and Founder, Vajravyuha',
                 'worksFor': {
                   '@type': 'Organization',
                   '@id': 'https://vajravyuha.in/#organization',
@@ -302,10 +303,17 @@ export default function FounderPage() {
                 },
                 'image': 'https://vajravyuha.in/images/portrait.png',
                 'url': 'https://vajravyuha.in/founder',
+                'email': 'mailto:vajra.vyuha.official@gmail.com',
                 'description':
-                  'Aditya Gothe is the Founder & CEO of Vajravyuha — Indian entrepreneur, full-stack developer, patriotic musical artist, 3D game designer, and fintech app creator.',
+                  'Aditya Gothe is the CEO and Founder of Vajravyuha from Vijayapura, Karnataka, India. He is a BTech student, full-stack software developer, game developer, and verified music artist with releases including Two Stars Rising and Heart On Duty.',
                 'nationality': 'Indian',
                 'birthDate': '2007-01-29',
+                'address': {
+                  '@type': 'PostalAddress',
+                  'addressLocality': 'Vijayapura',
+                  'addressRegion': 'Karnataka',
+                  'addressCountry': 'IN',
+                },
                 'alumniOf': [
                   {
                     '@type': 'EducationalOrganization',
@@ -327,13 +335,12 @@ export default function FounderPage() {
                   },
                 ],
                 'sameAs': [
-                  'https://github.com/adityagothe',
+                  'https://github.com/Ghost5400',
                   'https://www.linkedin.com/in/aditya-gothe-626352383/',
-                  'https://www.instagram.com/victor5400_/',
                   'https://www.instagram.com/ascend.with.adi/',
                   'https://youtube.com/@ascend-with-adi',
-                  'https://youtube.com/@victor5400_parasf',
                   'https://open.spotify.com/artist/7y9XCzNr4SgPxSV4cGt3kz',
+                  'https://music.apple.com/in/artist/aditya-gothe/1807868168',
                 ],
               },
             }),

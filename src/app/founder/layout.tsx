@@ -3,9 +3,13 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Aditya Gothe – Founder & CEO of Vajravyuha | Developer, Musician & Entrepreneur',
   description:
-    'Aditya Gothe is the Founder & CEO of Vajravyuha — an Indian entrepreneur, app developer, musical artist, and 3D game designer from Sainik School Bijapur. Known for patriotic music, fintech apps, and international expert research.',
+    'Aditya Gothe is the CEO and Founder of Vajravyuha from Vijayapura, Karnataka, India. Born on 29 January 2007, he is a full-stack developer, game developer, verified music artist, and BTech student.',
   keywords: [
     'Aditya Gothe',
+    'Aditya',
+    'Gothe',
+    'Gote',
+    '5400',
     'Aditya Gothe Vajravyuha',
     'Who is Aditya Gothe',
     'Vajravyuha founder',
@@ -19,9 +23,14 @@ export const metadata: Metadata = {
     'Habitropolis',
     'Vittora',
     'Udharo',
+    'Collez',
     'NDA music',
     'defense aspirant songs',
     'Two Stars Rising',
+    'Heart On Duty',
+    'expert research consultant',
+    'GLG member network',
+    'Coleman Research',
   ],
   openGraph: {
     type: 'profile',

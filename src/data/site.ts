@@ -12,9 +12,9 @@ export const siteConfig = {
     philosophy: 'Dharma Rakshati Rakshitah',
   },
   socials: {
-    github: 'https://github.com/adityagothe',
+    github: 'https://github.com/Ghost5400',
     linkedin: 'https://www.linkedin.com/in/aditya-gothe-626352383/',
-    instagram: 'https://www.instagram.com/victor5400_/',
+    instagram: 'https://www.instagram.com/ascend.with.adi/',
     instagramAscend: 'https://www.instagram.com/ascend.with.adi/',
     youtubeMusic: 'https://youtube.com/@victor5400_parasf',
     youtubePersonal: 'https://youtube.com/@ascend-with-adi',
